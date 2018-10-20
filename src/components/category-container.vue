@@ -3,6 +3,7 @@
         class="category-container"
         :class="{active: active}"
         @click="handleCategory"
+        @mouseenter="onSelectShoot"
     >
         <span>{{category.name}}</span>
     </section>
@@ -26,6 +27,12 @@ export default {
         type: Object,
         default: () => ({}),
     },
+
+    word: {
+      type: Object,
+      default: () => ({}),
+      require: true,
+    },
   },
 
   watch: {
@@ -41,6 +48,22 @@ export default {
         this.active = !this.active;
         this.$emit('category', this.category);
     },
+
+    onSelectShoot() {
+        if (!this.word) {
+            return;
+        }
+        this.active = true;
+        this.$emit('category', this.category);
+    },
+
+    onCancalShoot() {
+        if (!this.word) {
+            return;
+        }
+        this.active = false
+        this.$emit('category', null);
+    },
   }
 }
 </script>
@@ -54,7 +77,7 @@ export default {
   color: #ffffff;
   // width: 240px;
   height: 50px;
-//   user-select: none;
+  //   user-select: none;
 
   text-align: center;
   line-height: 40px;

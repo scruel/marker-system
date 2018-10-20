@@ -40,7 +40,7 @@ export default {
         //   }
 
         //   this.$emit('search', this.keyword)
-        window.location.replace = `https://www.baidu.com`
+        window.location.href = `https://www.baidu.com`
       }
   }
 }

@@ -6,6 +6,7 @@
             alt="prev"
             @click="handlerClick"
         >
+        <span>忽略当前词语</span>
         <img
             v-if="direction"
             src="../assets/image/right-circle.png"
@@ -39,6 +40,14 @@ export default {
 <style lang="scss" scope>
 .switch-container {
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  color: #ffffff;
+
+  span {
+    display: inline-block;
+    margin-right: 5px;
+  }
 
   img {
     user-select: none;

@@ -51,6 +51,7 @@
             :key="index"
             :channel="category"
             :category="item"
+            :word="word"
             @category="onHandlerCategory"
           />
         </div>
@@ -201,14 +202,14 @@ export default {
         for (let i = 0; i < 4 - model.length; i++) {
           temp.push(Object.assign({}, word, {
             color: {
-              'background-color': this.colors[this.pointer % 2],
+              'background-color': this.colors[0],
             },
           }));
         }
         for (let i = 0; i < model.length; i++) {
           temp.push(Object.assign({}, this.words[this.pointer + 1], {
             color: {
-              'background-color': this.colors[(this.pointer + 1 ) % 2],
+              'background-color': this.colors[1],
             },
           }));
         } 
@@ -263,6 +264,11 @@ export default {
     },
 
     onHandlerCategory(category) {
+      if (!category) {
+        this.category = null;
+        return;
+      }
+      
       if (this.category && this.category.name == category.name) {
         this.category = null;
         return;
