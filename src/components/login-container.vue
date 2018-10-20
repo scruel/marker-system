@@ -48,9 +48,7 @@ export default {
               return;
           }
 
-          this.$emit('login', {
-              student,
-          });
+          this.$emit('login', student);
       }
   }
 }
@@ -102,6 +100,7 @@ export default {
 
     .button-item {
       background-color: #3ba3ff;
+      cursor: pointer;
 
       width: 240px;
       height: 42px;

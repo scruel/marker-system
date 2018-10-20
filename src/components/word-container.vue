@@ -5,10 +5,13 @@
   >
     <div
       ref="node"
-      :class="{animation: activity}"
       @mousedown="onMouseDown"
+      :class="{animation: activity}"
     >
-      <span>{{word}}</span>
+      <span>{{word.word}}</span>
+    </div>
+    <div v-if="visible">
+      <span>{{alternative.word}}</span>
     </div>
   </section>
 </template>
@@ -21,17 +24,29 @@ export default {
       offsetX: 0,
       offsetY: 0,
       destroy: true,
+      visible: false,
     };
   },
 
   props: {
     word: {
-      type: String,
-      default: '',
+      type: Object,
+      default: () => ({}),
     },
+
+    serial: {
+      type: Number,
+      default: 0,
+    },
+
+    alternative: {
+      type: Object,
+      default: () => ({}),
+    },
+
     marker: {
-      type: String,
-      default: '',
+      type: Object,
+      default: () => ({}),
     },
   },
 
@@ -56,6 +71,7 @@ export default {
 
       if (!this.activity) {
         this.activity = true;
+        this.visible = true;
       }
 
       document.onmousemove = this.onMouseMove.bind(this);
@@ -80,13 +96,16 @@ export default {
       document.onmouseup = null;
 
       if (this.marker) {
-        this.$emit('answer');
-        this.destroy = false;
+        this.$emit('answer', this.serial);
+        // this.destroy = false;
+        this.activity = false;
+        this.visible = false;
         return;
       }
 
       if (this.activity) {
         this.activity = false;
+        this.visible = false;
       }
     },
   },
@@ -96,9 +115,10 @@ export default {
 <style lang="scss" scope>
 .word-container {
   div {
+    cursor: move;
     border: 1px solid #ffffff;
     border-radius: 4px;
-    padding: 5px 20px;
+    padding: 10px 20px;
     color: #ffffff;
 
     transition: all 0.1s;
@@ -106,13 +126,14 @@ export default {
 
   span {
     user-select: none;
+    // user-select: all;
   }
 }
 
 .animation {
   position: absolute;
-  z-index: 100;
-  border: 0px;
-  background-color: #1e1e1e;
+  z-index: 10;
+  border: 0px !important;
+  background-color: #2b96e0;
 }
 </style>

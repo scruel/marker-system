@@ -4,7 +4,7 @@
     @mouseenter="onSelectShoot"
     @mouseleave="onCancalShoot"
   >
-    <span>{{marker}}</span>
+    <span>{{marker.name}}</span>
   </section>
 </template>
 
@@ -16,11 +16,13 @@ export default {
 
   props: {
     marker: {
-      type: String,
-      require: true,
+      type: Object,
+      default: () => ({}),
+      required: true,
     },
     word: {
-      type: String,
+      type: Object,
+      default: () => ({}),
       require: true,
     },
   },
@@ -44,10 +46,10 @@ export default {
 .marker-container {
   // border: 1px solid #1e1e1e;
   border-radius: 4px;
-  padding: 5px 20px;
+  padding: 10px 20px;
   background: #ffffff;
-  width: 240px;
-  height: 60px;
+  // width: 240px;
+  height: 80px;
 
   text-align: center;
   line-height: 60px;
