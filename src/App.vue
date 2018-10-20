@@ -15,10 +15,11 @@
           @select="onSelectWord"
           @answer="onBuildAnswer"
         /> -->
-        <switch-container
+        <!-- <switch-container
           :direction="false"
           @prev="onPrevWord"
-        />
+        /> -->
+        <div />
         <div class="shadow-block">
           <word-container
             v-for="(item, index) in select"
@@ -28,6 +29,7 @@
             :alternative="alternative"
             :marker="marker"
             @select="onSelectWord"
+            @cannal="onCannalWord"
             @answer="onBuildAnswer"
           />
         </div>
@@ -38,6 +40,12 @@
       </div>
       <div class="category-list">
         <div class="shadow-block">
+          <div
+            class="category-container"
+            @click="onHandlerCategoryReset"
+          >
+            <span>全部</span>
+          </div>
           <category-container
             v-for="(item, index) in categorys"
             :key="index"
@@ -64,6 +72,7 @@
         :message="message"
         ref="tip"
       />
+      <count-container :count="count" />
     </div>
   </div>
 </template>
@@ -76,6 +85,7 @@ import TipContainer from "./components/tip-container";
 import SwitchContainer from "./components/switch-container";
 import CategoryContainer from "./components/category-container";
 import SearchContainer from "./components/search-container";
+import CountContainer from "./components/count-container";
 
 import Marker from "./config/marker";
 import Category from "./config/category";
@@ -104,6 +114,7 @@ export default {
       message: '',
       answer: new Map(),
       answer_serial: [],
+      count: 0
     };
   },
 
@@ -115,10 +126,14 @@ export default {
     SwitchContainer,
     CategoryContainer,
     SearchContainer,
+    CountContainer,
   },
 
   created() {
    const token =  Cookies.getCookie('token');
+
+   const count =  window.sessionStorage.getItem('count');
+
    if (token) {
      this.visible = false;
      this.token = token;
@@ -142,6 +157,10 @@ export default {
       this.word = word;
     },
 
+    onCannalWord() {
+      this.word = null;
+    },
+
     onSelectMarker(marker) {
       this.marker = marker;
     },
@@ -152,9 +171,23 @@ export default {
 
     onBuildAnswer(serial) {
       const { answer, answer_serial, marker, word, shadow } = this;
+
+      this.words = this.words.map(item => {
+        if (item.id == word.id) {
+          console.log('====================================');
+          console.log(item.count);
+          console.log('====================================');
+          item.count = item.count + 1;
+        }
+        return item;
+      });
+      
       const model = answer.get(word.id) || [];
+      
       model.push(marker.uuid);
+
       answer.set(word.id, model);
+      
       if (shadow  && shadow.id != word.id) {
         answer_serial.push(shadow.id);
         let temp = [];
@@ -188,6 +221,8 @@ export default {
           mark_list,
         });
         this.answer.delete(word_id);
+        this.count += 1;
+        window.sessionStorage.setItem('count', this.count);
       }
 
       console.log('====================================');
@@ -215,6 +250,10 @@ export default {
       this.category = category;
     },
 
+    onHandlerCategoryReset() {
+      this.category = null;
+    },
+
     onPrevWord() {
       const { pointer, words } = this;
       
@@ -222,7 +261,7 @@ export default {
         return;
       }
       
-      const work = this.words[pointer - 1 ];
+      const work = this.words[pointer - 1];
       let temp = [];
 
       for (let i = 0; i < 4; i++) {
@@ -275,10 +314,12 @@ export default {
           count, 
         }
       ).catch((error) => {
-        
+        this.visible = true;
       });
 
-      this.words = data.data;
+      this.words = data.data.map(item =>  Object.assign({}, item, {
+        count: 0,
+      }));
 
       for(let i = 0; i < 4; i += 1) {
         this.select.push(data.data[0]);
@@ -330,7 +371,7 @@ export default {
   justify-content: space-between;
 
   .category-container {
-    margin-left: 10px;
+    margin-left: 5px;
     margin-bottom: 10px;
   }
 }
@@ -368,7 +409,7 @@ export default {
   justify-content: center;
 
   .marker-container {
-    margin-left: 10px;
+    margin-left: 20px;
     margin-bottom: 10px;
   }
 }

@@ -10,9 +10,9 @@ export default {
   },
 
   setCookie(cname, cvalue, exdays, cpath = '/') {
-    const d = new Date();
-    d.setTime(d.getTime() + exdays * 24 * 60 * 60 * 1000);
-    const expires = `expires=${d.toGMTString()}`;
-    document.cookie = `${cname}=${cvalue}; ${expires}; path=${cpath}`;
+    // const d = new Date();
+    // d.setTime(d.getTime() + exdays * 24 * 60 * 60 * 1000);
+    // const expires = `expires=${d.toGMTString()}`;
+    document.cookie = `${cname}=${cvalue};`;
   },
 };

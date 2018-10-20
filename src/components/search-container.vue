@@ -35,11 +35,12 @@ export default {
       },
 
       handlerSearch() {
-          if (!this.keyword) {
-              return;
-          }
+        //   if (!this.keyword) {
+        //       return;
+        //   }
 
-          this.$emit('search', this.keyword)
+        //   this.$emit('search', this.keyword)
+        window.location.href = `www.baidu.com`
       }
   }
 }
@@ -68,7 +69,7 @@ export default {
   }
 
   img {
-    user-select: none;
+    // user-select: none;
     width: 20px;
     height: 20px;
   }

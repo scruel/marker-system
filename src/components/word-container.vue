@@ -11,7 +11,7 @@
       <span>{{word.word}}</span>
     </div>
     <div v-if="visible">
-      <span>{{alternative.word}}</span>
+      <span style="opacity: 0;">{{alternative.word}}</span>
     </div>
   </section>
 </template>
@@ -85,8 +85,8 @@ export default {
       //   return;
       // }
 
-      const x = event.clientX + 5;
-      const y = event.clientY + 5;
+      const x = event.clientX + 2; 
+      const y = event.clientY + 2;
       this.$refs.node.style.left = `${x}px`;
       this.$refs.node.style.top = `${y}px`;
     },
@@ -110,6 +110,7 @@ export default {
       if (this.activity) {
         this.activity = false;
         this.visible = false;
+        this.$emit('cancal', null);
       }
     },
   },
