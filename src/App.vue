@@ -55,7 +55,8 @@
             @category="onHandlerCategory"
           />
         </div>
-        <search-container @search="onHandlerSearch" />
+        <!-- <search-container @search="onHandlerSearch" /> -->
+        <div />
       </div>
       <div class="marker-list">
         <div class="shadow-block">
@@ -218,7 +219,7 @@ export default {
       } else {
         this.select[serial] = Object.assign({}, this.alternative, {
           color: {
-            'background-color': this.colors[this.pointer % 2],
+            'background-color': this.colors[1],
           },
         }) ;
         this.alternative = this.words[this.pointer];
@@ -300,13 +301,14 @@ export default {
     },
 
     onNextWord() {
-      const { pointer, words } = this;
+      const { pointer, answer, words, token } = this;
       
       if (pointer > words.length) {
         return;
       }
       
       const word = words[pointer];
+
       let temp = [];
 
       for (let i = 0; i < 4; i++) {
@@ -320,6 +322,21 @@ export default {
       this.select = temp;
       this.pointer = this.pointer + 1;
       this.alternative = this.words[this.pointer + 1];
+
+      const mark_list = answer.get(words[pointer - 1].id) || [];
+
+      this.onNetworkMark({
+        token,
+        word_id: words[pointer - 1].id,
+        mark_list,
+      });
+
+      if(answer.get(words[pointer - 1].id)) {
+        this.answer.delete(word_id);
+      }
+
+      this.count += 1;
+      window.sessionStorage.setItem('count', this.count);
     },
 
     async onNetworkLogin(student_id) {
