@@ -1,6 +1,9 @@
 <template>
     <section class="count-container">
-        <div>{{count}}</div>
+        <div>
+            <span>{{count}}</span>
+            <span>(已标记词汇)</span>
+        </div>
     </section>
 </template>
     
@@ -25,16 +28,30 @@ export default {
   bottom: 20px;
   right: 20px;
 
-  width: 40px;
-  height: 40px;
+  width: 90px;
+  height: 90px;
   border-radius: 50%;
 
-  line-height: 40px;
+  color: #c2251f;
+  //   line-height: 40px;
   text-align: center;
 
   box-shadow: 2px 2px 2px 0 rgba(40, 120, 255, 0.08),
     2px -2px 2px 0 rgba(40, 120, 255, 0.08),
     -2px -2px 2px 0 rgba(40, 120, 255, 0.08),
     -2px 2px 2px 0 rgba(40, 120, 255, 0.08);
+  transform: scale(0.75);
+
+  div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 80px;
+
+    span:nth-of-type(2) {
+      font-size: 10px;
+    }
+  }
 }
 </style>
