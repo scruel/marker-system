@@ -92,6 +92,10 @@ export default {
     },
 
     onMouseUp() {
+      let { offsetX, offsetY } = this;
+      this.$refs.node.style.left = `${offsetX}px`;
+      this.$refs.node.style.top = `${offsetY}px`;
+      
       document.onmousemove = null;
       document.onmouseup = null;
 
@@ -131,7 +135,7 @@ export default {
 }
 
 .animation {
-  position: absolute;
+  position: fixed;
   z-index: 10;
   border: 0px !important;
   background-color: #2b96e0;

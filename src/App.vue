@@ -178,7 +178,8 @@ export default {
       console.log('====================================');
 
       if (this.answer.size && !(this.answer.size % 3)) {
-        const word_id = answer_serial[0];
+        const word_id = answer_serial.unshift();
+        console.warn(word_id);
         const token = this.token;
         const mark_list = this.answer.get(word_id);
         this.onNetworkMark({
