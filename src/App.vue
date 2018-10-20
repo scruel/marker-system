@@ -114,7 +114,8 @@ export default {
       message: '',
       answer: new Map(),
       answer_serial: [],
-      count: 0
+      count: 0,
+      colors: ['#4caf50', '#8b7342', '#e24045', '#41b883'], 
     };
   },
 
@@ -174,9 +175,6 @@ export default {
 
       this.words = this.words.map(item => {
         if (item.id == word.id) {
-          console.log('====================================');
-          console.log(item.count);
-          console.log('====================================');
           item.count = item.count + 1;
         }
         return item;
@@ -188,17 +186,29 @@ export default {
 
       answer.set(word.id, model);
       
-      if (shadow  && shadow.id != word.id) {
+      if (shadow && shadow.id != word.id) {
         answer_serial.push(shadow.id);
         let temp = [];
         for (let i = 0; i < 4 - model.length; i++) {
-          temp.push(word);
+          temp.push(Object.assign({}, word, {
+            color: {
+              'background-color': this.colors[(this.pointer + 1 ) % 4],
+            },
+          }));
         }
-        temp.push(this.words[this.pointer + 1]);
+        temp.push(Object.assign({}, this.words[this.pointer + 1], {
+            color: {
+              'background-color': this.colors[this.pointer % 4],
+            },
+          }));
         this.select = temp;
         this.pointer += 1;
       } else {
-        this.select[serial] = this.alternative;
+        this.select[serial] = Object.assign({}, this.alternative, {
+          color: {
+            'background-color': this.colors[this.pointer % 4],
+          },
+        }) ;
         this.alternative = this.words[this.pointer];
       }
       
@@ -212,7 +222,6 @@ export default {
 
       if (this.answer.size && !(this.answer.size % 3)) {
         const word_id = answer_serial.shift();
-        console.warn(word_id);
         const token = this.token;
         const mark_list = this.answer.get(word_id);
         this.onNetworkMark({
@@ -317,12 +326,16 @@ export default {
         this.visible = true;
       });
 
-      this.words = data.data.map(item =>  Object.assign({}, item, {
+      this.words = data.data.filter(id => !!id).map(item =>  Object.assign({}, item, {
         count: 0,
       }));
 
       for(let i = 0; i < 4; i += 1) {
-        this.select.push(data.data[0]);
+        this.select.push(Object.assign({}, data.data[0], {
+          color: {
+            'background-color': this.colors[0],
+          }
+        }));
       }
 
       this.alternative = data.data[1];

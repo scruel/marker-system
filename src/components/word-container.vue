@@ -2,6 +2,7 @@
   <section
     v-if="destroy"
     class="word-container"
+    :style="word.color"
   >
     <div
       ref="node"
@@ -31,7 +32,12 @@ export default {
   props: {
     word: {
       type: Object,
-      default: () => ({}),
+      default: () => ({
+        color: {
+          'border-color': '#ffffff',
+          'color' : '#ffffff',
+        },
+      }),
     },
 
     serial: {
@@ -84,6 +90,7 @@ export default {
       // if (!this.activity) {
       //   return;
       // }
+      window.getSelection().removeAllRanges();
 
       const x = event.clientX + 10; 
       const y = event.clientY + 10;
@@ -92,6 +99,8 @@ export default {
     },
 
     onMouseUp() {
+      window.getSelection().removeAllRanges();
+
       let { offsetX, offsetY } = this;
       this.$refs.node.style.left = `${offsetX}px`;
       this.$refs.node.style.top = `${offsetY}px`;
@@ -119,9 +128,16 @@ export default {
 
 <style lang="scss" scope>
 .word-container {
+  border-radius: 4px;
+
+  box-shadow: 2px 2px 2px 0 rgba(40, 120, 255, 0.08),
+    2px -2px 2px 0 rgba(40, 120, 255, 0.08),
+    -2px -2px 2px 0 rgba(40, 120, 255, 0.08),
+    -2px 2px 2px 0 rgba(40, 120, 255, 0.08);
+
   div {
     cursor: move;
-    border: 1px solid #ffffff;
+    // border: 1px solid #ffffff;
     border-radius: 4px;
     padding: 10px 20px;
     color: #ffffff;
