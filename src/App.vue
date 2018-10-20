@@ -106,6 +106,7 @@ export default {
       pointer: 0,
       shadow: null,
       word: null,
+      work_count: 0,
       words: [],
       marker: null,
       markers: Marker.data,
@@ -200,24 +201,27 @@ export default {
         for (let i = 0; i < 4 - model.length; i++) {
           temp.push(Object.assign({}, word, {
             color: {
-              'background-color': this.colors[(this.pointer + 1 ) % 4],
+              'background-color': this.colors[this.pointer % 2],
             },
           }));
         }
-        temp.push(Object.assign({}, this.words[this.pointer + 1], {
+        for (let i = 0; i < model.length; i++) {
+          temp.push(Object.assign({}, this.words[this.pointer + 1], {
             color: {
-              'background-color': this.colors[this.pointer % 4],
+              'background-color': this.colors[(this.pointer + 1 ) % 2],
             },
           }));
+        } 
         this.select = temp;
         this.pointer += 1;
       } else {
         this.select[serial] = Object.assign({}, this.alternative, {
           color: {
-            'background-color': this.colors[this.pointer % 4],
+            'background-color': this.colors[this.pointer % 2],
           },
         }) ;
         this.alternative = this.words[this.pointer];
+        this.work_count += 1;
       }
       
       this.shadow = word;
@@ -302,13 +306,14 @@ export default {
       for (let i = 0; i < 4; i++) {
         temp.push(Object.assign({}, word, {
           color: {
-            'background-color': this.colors[(this.pointer + 1 ) % 4],
+            'background-color': this.colors[(this.pointer + 1 ) % 2],
           },
         }));
       }
 
       this.select = temp;
       this.pointer = this.pointer + 1;
+      this.alternative = this.words[this.pointer + 1];
     },
 
     async onNetworkLogin(student_id) {

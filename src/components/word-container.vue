@@ -92,8 +92,8 @@ export default {
       // }
       window.getSelection().removeAllRanges();
 
-      const x = event.clientX + 10; 
-      const y = event.clientY + 10;
+      const x = event.clientX + 15; 
+      const y = event.clientY + 15;
       this.$refs.node.style.left = `${x}px`;
       this.$refs.node.style.top = `${y}px`;
     },
