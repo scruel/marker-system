@@ -329,6 +329,7 @@ export default {
       Cookies.setCookie('token', data.token);
       this.visible = false;
       this.token = data.token;
+      this.count = data.action_cnt;
       // 获取题目
       this.onNetworkSubject(data.token);
     },
