@@ -189,6 +189,11 @@ export default {
         });
         this.answer.delete(word_id);
       }
+
+      console.log('====================================');
+      console.log(answer_serial);
+      console.log('====================================');
+
     },
 
     onHandleError(error) {
@@ -258,7 +263,7 @@ export default {
 
       Cookies.setCookie('token', data.token);
       this.visible = false;
-      this.token = token;
+      this.token = data.token;
       // 获取题目
       this.onNetworkSubject(data.token);
     },
@@ -290,9 +295,7 @@ export default {
     },
 
     async onNetworkMark(marker) {
-      const { data } = await mark(marker).catch((error) => {
-
-      });
+      const { data } = await mark(marker).catch((error) => {});
     }
   },
 };
