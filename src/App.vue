@@ -174,11 +174,11 @@ export default {
       this.marker = null;
 
       console.log('====================================');
-      console.log(this.answer, answer_serial);
+      console.log(answer_serial);
       console.log('====================================');
 
       if (this.answer.size && !(this.answer.size % 3)) {
-        const word_id = answer_serial.unshift();
+        const word_id = answer_serial.shift();
         console.warn(word_id);
         const token = this.token;
         const mark_list = this.answer.get(word_id);
