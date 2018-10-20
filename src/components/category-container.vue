@@ -4,6 +4,7 @@
         :class="{active: active}"
         @click="handleCategory"
         @mouseenter="onSelectShoot"
+        @mouseleave="onCancalShoot"
     >
         <span>{{category.name}}</span>
     </section>
@@ -14,6 +15,7 @@ export default {
   data() {
     return {
         active: false,
+        clicks: true,
     }
   },
 
@@ -39,6 +41,7 @@ export default {
       channel(n) {
           if (!n || n.name !== this.category.name) {
               this.active = false;
+              this.clicks = true;
           }
       },
   },
@@ -46,6 +49,7 @@ export default {
   methods: {
     handleCategory() {
         this.active = !this.active;
+        this.clicks = !this.clicks;
         this.$emit('category', this.category);
     },
 
@@ -53,16 +57,23 @@ export default {
         if (!this.word) {
             return;
         }
-        this.active = true;
-        this.$emit('category', this.category);
+        this.timer = setTimeout(() => {
+            this.active = true;
+            this.$emit('category', this.category);
+        }, 300);
     },
 
     onCancalShoot() {
-        if (!this.word) {
-            return;
+        clearTimeout(this.timer);
+        
+        if (this.active && this.clicks) {
+            this.$emit('category', null);
         }
-        this.active = false
-        this.$emit('category', null);
+
+        if (this.clicks) {
+            this.active = false;
+        }
+        
     },
   }
 }

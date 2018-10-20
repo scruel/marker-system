@@ -6,6 +6,7 @@
     @mouseleave="onCancalShoot"
   >
     <span>{{marker.name}}</span>
+    <span>{{marker.belong}}</span>
   </section>
 </template>
 
@@ -61,17 +62,28 @@ export default {
   background: #ffffff;
   width: 200px;
   height: 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 
   text-align: center;
-  line-height: 60px;
+  // line-height: 60px;
 
   box-shadow: 2px 2px 2px 0 rgba(40, 120, 255, 0.08),
     2px -2px 2px 0 rgba(40, 120, 255, 0.08),
     -2px -2px 2px 0 rgba(40, 120, 255, 0.08),
     -2px 2px 2px 0 rgba(40, 120, 255, 0.08);
 
-  span {
+  span:nth-of-type(1) {
     // user-select: none;
+    font-size: 18px;
+  }
+
+  span:nth-of-type(2) {
+    display: block;
+    font-size: 14px;
+    color: #288ed8;
   }
 
   transition: all 0.1s;

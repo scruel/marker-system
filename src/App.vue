@@ -42,6 +42,7 @@
         <div class="shadow-block">
           <div
             class="category-container"
+            :class="{active: !this.category}"
             @click="onHandlerCategoryReset"
           >
             <span>全部</span>
@@ -190,13 +191,41 @@ export default {
         }
         return item;
       });
-      
+
       const model = answer.get(word.id) || [];
       
       model.push(marker.uuid);
 
       answer.set(word.id, model);
       
+      // if (shadow && shadow.id != word.id) {
+      //   answer_serial.push(shadow.id);
+      //   let temp = [];
+      //   for (let i = 0; i < 3 - model.length; i++) {
+      //     temp.push(Object.assign({}, word, {
+      //       color: {
+      //         'background-color': this.colors[0],
+      //       },
+      //     }));
+      //   }
+      //   for (let i = 0; i < 1 + model.length; i++) {
+      //     temp.push(Object.assign({}, this.words[this.pointer + 1], {
+      //       color: {
+      //         'background-color': this.colors[1],
+      //       },
+      //     }));
+      //   } 
+      //   this.select = temp;
+      //   this.pointer += 1;
+      // } else {
+      //   this.select[serial] = Object.assign({}, this.alternative, {
+      //     color: {
+      //       'background-color': this.colors[1],
+      //     },
+      //   }) ;
+      //   this.alternative = this.words[this.pointer];
+      // }
+
       if (shadow && shadow.id != word.id) {
         answer_serial.push(shadow.id);
         let temp = [];
@@ -221,11 +250,21 @@ export default {
           color: {
             'background-color': this.colors[1],
           },
-        }) ;
+        });
         this.alternative = this.words[this.pointer];
         this.work_count += 1;
       }
-      
+
+      if(this.work_count == 4) {
+        this.pointer += 1;
+        this.select = this.select.map(item => Object.assign({}, item, {
+          color: {
+            'background-color': this.colors[0],
+          },
+        }));
+        this.work_count = 0;
+      }
+
       this.shadow = word;
       this.word = null;
       this.marker = null;
@@ -314,7 +353,7 @@ export default {
       for (let i = 0; i < 4; i++) {
         temp.push(Object.assign({}, word, {
           color: {
-            'background-color': this.colors[(this.pointer + 1 ) % 2],
+            'background-color': this.colors[0],
           },
         }));
       }
@@ -446,7 +485,7 @@ export default {
   box-shadow: 2px 0px 4px 0 rgba(40, 120, 255, 0.08);
 
   // width: 200px;
-  height: 200px;
+  height: 150px;
   top: 0px;
 
   padding: 10px 20px;
@@ -461,7 +500,7 @@ export default {
 
 .marker-list {
   padding-top: 10px;
-  padding: 40px;
+  padding: 30px;
 
   flex: 1;
   display: flex;
