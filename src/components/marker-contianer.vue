@@ -31,6 +31,12 @@ export default {
   },
 
   methods: {
+    onTestEvent() {
+      console.log('====================================');
+      console.log('dala');
+      console.log('====================================');
+    },
+
     onSelectShoot() {
       if (!this.word) {
         return;

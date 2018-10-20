@@ -54,7 +54,7 @@ export default {
   color: #ffffff;
   // width: 240px;
   height: 50px;
-  user-select: none;
+//   user-select: none;
 
   text-align: center;
   line-height: 40px;

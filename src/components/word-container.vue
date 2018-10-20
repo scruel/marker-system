@@ -85,8 +85,8 @@ export default {
       //   return;
       // }
 
-      const x = event.clientX + 2; 
-      const y = event.clientY + 2;
+      const x = event.clientX + 10; 
+      const y = event.clientY + 10;
       this.$refs.node.style.left = `${x}px`;
       this.$refs.node.style.top = `${y}px`;
     },

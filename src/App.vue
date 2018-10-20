@@ -29,7 +29,7 @@
             :alternative="alternative"
             :marker="marker"
             @select="onSelectWord"
-            @cannal="onCannalWord"
+            @cancal="onCannalWord"
             @answer="onBuildAnswer"
           />
         </div>
