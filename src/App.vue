@@ -115,7 +115,7 @@ export default {
       answer: new Map(),
       answer_serial: [],
       count: 0,
-      colors: ['#4caf50', '#8b7342', '#e24045', '#41b883'], 
+      colors: ['#4caf50', '#607d8b', '#e24045', '#ffc700'], 
     };
   },
 
@@ -140,6 +140,14 @@ export default {
      this.token = token;
      this.onNetworkSubject(token);
    }
+  },
+
+  watch: {
+    pointer(n) {
+      if (!(n % 75)) {
+        this.onNetworkSubject(this.token);
+      }
+    }
   },
 
   computed: {
@@ -292,7 +300,11 @@ export default {
       let temp = [];
 
       for (let i = 0; i < 4; i++) {
-        temp.push(word);
+        temp.push(Object.assign({}, word, {
+          color: {
+            'background-color': this.colors[(this.pointer + 1 ) % 4],
+          },
+        }));
       }
 
       this.select = temp;
@@ -326,10 +338,17 @@ export default {
         this.visible = true;
       });
 
-      this.words = data.data.filter(id => !!id).map(item =>  Object.assign({}, item, {
+      const temp = data.data.filter(id => !!id).map(item =>  Object.assign({}, item, {
         count: 0,
       }));
 
+      if(this.pointer > 1) {
+        this.words = this.words.concat(temp);
+        return;
+      }
+
+      this.words = temp;
+      
       for(let i = 0; i < 4; i += 1) {
         this.select.push(Object.assign({}, data.data[0], {
           color: {
