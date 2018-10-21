@@ -7,15 +7,12 @@
         @error="onHandleError"
       />
       <div class="navbar-block">
-        <search-container
-          :word="word"
-          @search="onHandlerSearch"
-        />
-        <div class="username">{{UsernameProxy}}</div>
-        <user-container :username="username" />
-      </div>
-      <div class="category-list">
         <div class="shadow-block">
+          <img
+            class="logo"
+            src="./assets/image/logo.png"
+            alt=""
+          >
           <div
             class="category-container"
             :class="{active: !this.category}"
@@ -32,19 +29,29 @@
             @category="onHandlerCategory"
           />
         </div>
-        <!-- <div /> -->
-      </div>
-      <div class="marker-list">
         <div class="shadow-block">
-          <marker-container
-            v-for="(item, index) in MarkersProxy"
-            :key="index"
-            :marker="item"
+          <search-container
             :word="word"
-            @select="onSelectMarker"
-            @cancal="onCancalMarker"
+            @search="onHandlerSearch"
           />
+          <div class="username">{{username}}</div>
+          <user-container />
         </div>
+      </div>
+      <!-- <div class="category-list">
+        <div class="shadow-block">
+        </div>
+        <div />
+      </div> -->
+      <div class="marker-list">
+        <marker-container
+          v-for="(item, index) in MarkersProxy"
+          :key="index"
+          :marker="item"
+          :word="word"
+          @select="onSelectMarker"
+          @cancal="onCancalMarker"
+        />
       </div>
       <div class="word-list">
         <switch-container
@@ -176,9 +183,9 @@ export default {
       
       return this.markers.filter(item => item.belong === this.category.name);
     },
-    UsernameProxy() {
-      return String.prototype.toUpperCase.apply(this.username);
-    }
+    // UsernameProxy() {
+    //   return String.prototype.toUpperCase.apply(this.username);
+    // }
   },
 
   methods: {
@@ -250,11 +257,13 @@ export default {
     },
 
     onPrevWord() {
-      let { pointer, answer } = this;
+      let { pointer, answer, word } = this;
 
       if (0 >= pointer) {
         return;
       }
+
+      answer[pointer] = word;
 
       pointer -= 1;
       
@@ -416,16 +425,22 @@ export default {
 .navbar-block {
   // position: fixed;
   // top: 0px;
-  padding: 20px 40px;
+  padding: 5px 30px;
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: space-between;
   // background-color: #1c74bf;
   border-bottom: 1px solid #03ddff;
   box-shadow: 2px 2px 2px 0 rgba(40, 120, 255, 0.08),
     2px -2px 2px 0 rgba(40, 120, 255, 0.08),
     -2px -2px 2px 0 rgba(40, 120, 255, 0.08),
     -2px 2px 2px 0 rgba(40, 120, 255, 0.08);
+
+  .logo {
+    width: 42px;
+    height: 42px;
+    margin-right: 10px;
+  }
 
   .search-container {
     margin-right: 10px;
@@ -436,7 +451,7 @@ export default {
     color: #2280ca;
     height: 36px;
     border-radius: 2px;
-    padding: 0px 20px;
+    padding: 0px 10px;
     line-height: 36px;
 
     margin-right: 10px;
@@ -456,8 +471,8 @@ export default {
   justify-content: space-between;
 
   .category-container {
-    margin-left: 5px;
-    margin-bottom: 10px;
+    margin-left: 10px;
+    // margin-bottom: 10px;
   }
 }
 
@@ -515,10 +530,10 @@ export default {
 
   flex: 1;
   display: flex;
-  // flex-wrap: wrap;
+  flex-wrap: wrap;
   align-items: center;
-  // justify-content: center;
-  justify-content: space-between;
+  justify-content: center;
+  // justify-content: space-between;
 
   .marker-container {
     margin-left: 20px;
