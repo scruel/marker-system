@@ -46,7 +46,7 @@ export default {
   cursor: pointer;
   position: fixed;
   height: 32px;
-  top: 20px;
+  top: 5px;
   right: 20px;
   display: flex;
   align-items: center;

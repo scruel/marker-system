@@ -27,3 +27,10 @@ export const mark = data =>
     method: 'POST',
     data,
   });
+
+export const valid = data =>
+  axios({
+    url: '/valid.php',
+    method: 'POST',
+    data,
+  });

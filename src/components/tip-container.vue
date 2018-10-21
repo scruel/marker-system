@@ -43,14 +43,15 @@ export default {
 <style lang="scss" scope>
 .tip-container {
   position: absolute;
-  z-index: 100;
-  background-color: #ff7200;
+  z-index: 10001;
+  background-color: #c72923;
 
   top: 10px;
   right: 10px;
 
+  font-size: 18px;
   color: #ffffff;
-  padding: 10px 30px;
+  padding: 20px 20px;
   border-radius: 4px;
 
   box-shadow: 4px 4px 4px 0 rgba(40, 120, 255, 0.08),

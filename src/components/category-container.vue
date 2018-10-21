@@ -84,11 +84,12 @@ export default {
   background: #2280ca;
   color: #ffffff;
   // width: 240px;
-  height: 50px;
+  height: 40px;
   //   user-select: none;
+  cursor: pointer;
 
   text-align: center;
-  line-height: 40px;
+  line-height: 30px;
 
   box-shadow: 2px 2px 2px 0 rgba(40, 120, 255, 0.08),
     2px -2px 2px 0 rgba(40, 120, 255, 0.08),
