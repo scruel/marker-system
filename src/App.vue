@@ -6,42 +6,15 @@
         @login="onStudentLogin"
         @error="onHandleError"
       />
+      <user-container :username="username" />
       <div class="word-list">
-        <!-- <word-container
-          v-for="(item, index) in words"
-          :key="index"
-          :word="item"
-          :marker="marker"
-          @select="onSelectWord"
-          @answer="onBuildAnswer"
-        /> -->
-        <!-- <switch-container
-          :direction="false"
-          @prev="onPrevWord"
-        /> -->
-        <div />
-        <div class="shadow-block">
-          <word-container
-            v-for="(item, index) in select"
-            :key="index"
-            :serial="index"
-            :word="item"
-            :alternative="alternative"
-            :marker="marker"
-            @select="onSelectWord"
-            @cancal="onCannalWord"
-            @answer="onBuildAnswer"
-          />
-        </div>
-        <switch-container
-          :direction="true"
-          @next="onNextWord"
-        />
+        <word-container :word="word" />
       </div>
       <div class="category-list">
         <div class="shadow-block">
           <div
             class="category-container"
+            :class="{active: !this.category}"
             @click="onHandlerCategoryReset"
           >
             <span>全部</span>
@@ -59,6 +32,10 @@
         <div />
       </div>
       <div class="marker-list">
+        <switch-container
+          :direction="false"
+          @prev="onPrevWord"
+        />
         <div class="shadow-block">
           <marker-container
             v-for="(item, index) in MarkersProxy"
@@ -69,6 +46,10 @@
             @cancal="onCancalMarker"
           />
         </div>
+        <switch-container
+          :direction="true"
+          @next="onNextWord"
+        />
       </div>
       <tip-container
         :message="message"
@@ -88,6 +69,7 @@ import SwitchContainer from "./components/switch-container";
 import CategoryContainer from "./components/category-container";
 import SearchContainer from "./components/search-container";
 import CountContainer from "./components/count-container";
+import UserContainer from "./components/user-container";
 
 import Marker from "./config/marker";
 import Category from "./config/category";
@@ -101,24 +83,20 @@ export default {
 
   data() {
     return {
+      categorys: Category.data,
+      markers: Marker.data,
       token: '',
       visible: true,
-      select: [],
       alternative: null,
       pointer: 0,
-      shadow: null,
-      word: null,
-      work_count: 0,
+      word: {},
       words: [],
-      marker: null,
-      markers: Marker.data,
-      categorys: Category.data,
       category: null,
+      answer: [],
       message: '',
-      answer: new Map(),
-      answer_serial: [],
       count: 0,
       colors: ['#4caf50', '#607d8b', '#e24045', '#ffc700'], 
+      username: '',
     };
   },
 
@@ -131,12 +109,16 @@ export default {
     CategoryContainer,
     SearchContainer,
     CountContainer,
+    UserContainer,
   },
 
   created() {
    const token =  Cookies.getCookie('token');
 
    const count =  window.sessionStorage.getItem('count');
+   const username = window.sessionStorage.getItem('username');
+   this.count = count;
+   this.username = username;
 
    if (token) {
      this.visible = false;
@@ -147,15 +129,16 @@ export default {
 
   watch: {
     pointer(n) {
-      if (!(n % 75)) {
+      if (n && !(n % 75)) {
         this.onNetworkSubject(this.token);
       }
-    }
+    },
   },
 
   computed: {
     MarkersProxy() {
       if (!this.category) return this.markers;
+      
       return this.markers.filter(item => item.belong === this.category.name);
     },
   },
@@ -165,16 +148,31 @@ export default {
       this.onNetworkLogin(user);
     },
 
-    onSelectWord(word) {
-      this.word = word;
-    },
-
-    onCannalWord() {
-      this.word = null;
-    },
-
     onSelectMarker(marker) {
-      this.marker = marker;
+      const { word } = this;
+
+      let temp = word.mark_list;
+
+      if (!temp) {
+        this.word = Object.assign({}, word, {
+          mark_list: [marker.uuid],
+        });
+        return;
+      }
+
+      let instance = temp.find(item => item === marker.uuid);
+      if (instance) {
+        let ntemp = temp.filter(item => item !== marker.uuid);
+        this.word = Object.assign({}, word, {
+          mark_list: ntemp,
+        });
+        return;
+      }
+
+      temp.push(marker.uuid);
+      this.word = Object.assign({}, word, {
+        mark_list: temp,
+      });
     },
 
     onCancalMarker() {
@@ -182,76 +180,6 @@ export default {
     },
 
     onBuildAnswer(serial) {
-      const { answer, answer_serial, marker, word, shadow } = this;
-
-      this.words = this.words.map(item => {
-        if (item.id == word.id) {
-          item.count = item.count + 1;
-        }
-        return item;
-      });
-      
-      const model = answer.get(word.id) || [];
-      
-      model.push(marker.uuid);
-
-      answer.set(word.id, model);
-      
-      if (shadow && shadow.id != word.id) {
-        answer_serial.push(shadow.id);
-        let temp = [];
-        for (let i = 0; i < 4 - model.length; i++) {
-          temp.push(Object.assign({}, word, {
-            color: {
-              'background-color': this.colors[0],
-            },
-          }));
-        }
-        for (let i = 0; i < model.length; i++) {
-          temp.push(Object.assign({}, this.words[this.pointer + 1], {
-            color: {
-              'background-color': this.colors[1],
-            },
-          }));
-        } 
-        this.select = temp;
-        this.pointer += 1;
-      } else {
-        this.select[serial] = Object.assign({}, this.alternative, {
-          color: {
-            'background-color': this.colors[1],
-          },
-        }) ;
-        this.alternative = this.words[this.pointer];
-        this.work_count += 1;
-      }
-      
-      this.shadow = word;
-      this.word = null;
-      this.marker = null;
-
-      console.log('====================================');
-      console.log(answer_serial);
-      console.log('====================================');
-
-      if (this.answer.size && !(this.answer.size % 3)) {
-        const word_id = answer_serial.shift();
-        const token = this.token;
-        const mark_list = this.answer.get(word_id);
-        this.onNetworkMark({
-          token,
-          word_id,
-          mark_list,
-        });
-        this.answer.delete(word_id);
-        this.count += 1;
-        window.sessionStorage.setItem('count', this.count);
-      }
-
-      console.log('====================================');
-      console.log(answer_serial);
-      console.log('====================================');
-
     },
 
     onHandleError(error) {
@@ -283,60 +211,58 @@ export default {
     },
 
     onPrevWord() {
-      const { pointer, words } = this;
-      
-      if (0 < pointer) {
+      let { pointer, answer } = this;
+
+      if (0 >= pointer) {
         return;
       }
+
+      pointer -= 1;
       
-      const work = this.words[pointer - 1];
-      let temp = [];
-
-      for (let i = 0; i < 4; i++) {
-        temp.push(word);
-      }
-
-      this.select = temp;
-      this.pointer -= 1;
+      let temp  = answer[pointer];
+      this.word = Object.assign({}, temp, {
+        old_mark_list: [].concat(temp.mark_list) ,
+      });
+      
+      this.pointer = pointer;
+      this.category = null;
     },
 
     onNextWord() {
-      const { pointer, answer, words, token } = this;
+      const { pointer, words, word, token } = this;
       
-      if (pointer > words.length) {
+      if (pointer >= words.length) {
         return;
       }
-      
-      const word = words[pointer];
 
-      let temp = [];
-
-      for (let i = 0; i < 4; i++) {
-        temp.push(Object.assign({}, word, {
-          color: {
-            'background-color': this.colors[(this.pointer + 1 ) % 2],
-          },
-        }));
-      }
-
-      this.select = temp;
-      this.pointer = this.pointer + 1;
-      this.alternative = this.words[this.pointer + 1];
-
-      const mark_list = answer.get(words[pointer - 1].id) || [];
-
-      this.onNetworkMark({
+      let mark_result = {
         token,
-        word_id: words[pointer - 1].id,
-        mark_list,
-      });
+        word_id: word.id,
+        mark_list: word.mark_list || [],
+      };
 
-      if(answer.get(words[pointer - 1].id)) {
-        this.answer.delete(word_id);
+      if (word.old_mark_list) {
+        mark_result = Object.assign({}, mark_result, {
+          old_mark_list: word.old_mark_list,
+        });
+      } else {
+        this.answer.push(word);
+        this.count += 1;        
+        window.sessionStorage.setItem('count', this.count);
       }
 
-      this.count += 1;
-      window.sessionStorage.setItem('count', this.count);
+      this.onNetworkMark(mark_result);
+
+      this.word = pointer + 1 < this.answer.length ? Object.assign({}, this.answer[pointer + 1], {
+        old_mark_list: [].concat(this.answer[pointer + 1].mark_list),
+      }) : Object.assign({}, words[pointer + 1], {
+        mark_list: [],
+        color: {
+          'background-color': this.colors[(pointer + 1) % 4]
+        },
+      });
+      this.pointer += 1;
+      this.category = null;
     },
 
     async onNetworkLogin(student_id) {
@@ -351,7 +277,9 @@ export default {
 
       Cookies.setCookie('token', data.token);
       this.visible = false;
+      this.username = student_id,
       this.token = data.token;
+      window.sessionStorage.setItem('username', student_id);
       this.count = data.action_cnt;
       // 获取题目
       this.onNetworkSubject(data.token);
@@ -377,17 +305,9 @@ export default {
       }
 
       this.words = temp;
-      
-      for(let i = 0; i < 4; i += 1) {
-        this.select.push(Object.assign({}, data.data[0], {
-          color: {
-            'background-color': this.colors[0],
-          }
-        }));
-      }
-
-      this.alternative = data.data[1];
-      this.pointer = 1;
+      this.word = Object.assign({}, temp[0], {
+        mark_list: [],
+      });
     },
 
     async onNetworkCommit(answer) {
@@ -442,11 +362,13 @@ export default {
   display: flex;
   // flex-direction: column;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   box-shadow: 2px 0px 4px 0 rgba(40, 120, 255, 0.08);
 
+  font-size: 32px;
+
   // width: 200px;
-  height: 200px;
+  height: 120px;
   top: 0px;
 
   padding: 10px 20px;
@@ -461,17 +383,28 @@ export default {
 
 .marker-list {
   padding-top: 10px;
-  padding: 40px;
+  padding: 20px 30px;
 
   flex: 1;
   display: flex;
-  flex-wrap: wrap;
+  // flex-wrap: wrap;
   align-items: center;
-  justify-content: center;
+  // justify-content: center;
+  justify-content: space-between;
 
   .marker-container {
     margin-left: 20px;
     margin-bottom: 10px;
+  }
+
+  .switch-container:nth-of-type(1) {
+    border-radius: 50%;
+    background-color: #c72923;
+  }
+
+  .switch-container:nth-of-type(2) {
+    border-radius: 50%;
+    background-color: #288fd9;
   }
 }
 </style>

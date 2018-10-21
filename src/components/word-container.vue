@@ -6,14 +6,13 @@
   >
     <div
       ref="node"
-      @mousedown="onMouseDown"
       :class="{animation: activity}"
     >
       <span>{{word.word}}</span>
     </div>
-    <div v-if="visible">
+    <!-- <div v-if="visible">
       <span style="opacity: 0;">{{alternative.word}}</span>
-    </div>
+    </div> -->
   </section>
 </template>
 
@@ -136,7 +135,7 @@ export default {
     -2px 2px 2px 0 rgba(40, 120, 255, 0.08);
 
   div {
-    cursor: move;
+    // cursor: move;
     // border: 1px solid #ffffff;
     border-radius: 4px;
     padding: 10px 20px;

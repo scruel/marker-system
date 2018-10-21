@@ -1,10 +1,10 @@
 <template>
-    <section class="count-container">
-        <div>
-            <span>{{count}}</span>
-            <span>(已标记词汇)</span>
-        </div>
-    </section>
+  <section class="count-container">
+    <div>
+      <span>{{count}}</span>
+      <span>(已标记词汇)</span>
+    </div>
+  </section>
 </template>
     
 <script>
@@ -35,7 +35,7 @@ export default {
   color: #c2251f;
   //   line-height: 40px;
   text-align: center;
-
+  background-color: #ffffff;
   box-shadow: 2px 2px 2px 0 rgba(40, 120, 255, 0.08),
     2px -2px 2px 0 rgba(40, 120, 255, 0.08),
     -2px -2px 2px 0 rgba(40, 120, 255, 0.08),
