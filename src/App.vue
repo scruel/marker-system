@@ -117,7 +117,7 @@ export default {
 
    const count =  window.sessionStorage.getItem('count');
    const username = window.sessionStorage.getItem('username');
-   this.count = count;
+   this.count = Number.parseInt(count);
    this.username = username;
 
    if (token) {
@@ -275,6 +275,12 @@ export default {
         this.$refs.tip.handlerError();
       });
 
+      if(data.status) {
+        this.message = data.msg;
+        this.$refs.tip.handlerError();
+        return;
+      }
+
       Cookies.setCookie('token', data.token);
       this.visible = false;
       this.username = student_id,
@@ -399,7 +405,7 @@ export default {
 
   .switch-container:nth-of-type(1) {
     border-radius: 50%;
-    background-color: #c72923;
+    background-color: #288fd9;
   }
 
   .switch-container:nth-of-type(2) {
