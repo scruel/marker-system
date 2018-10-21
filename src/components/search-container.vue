@@ -60,7 +60,7 @@ export default {
     
 <style lang="scss" scope>
 .search-container {
-  padding: 0px 10px;
+  // padding: 0px 10px;
   height: 100%;
   display: flex;
   align-items: center;

@@ -80,9 +80,9 @@ export default {
 .category-container {
   // border: 1px solid #1e1e1e;
   border-radius: 4px;
-  padding: 5px 30px;
-  background: #2280ca;
-  color: #ffffff;
+  padding: 5px 10px;
+  //   background: #2280ca;
+  color: #545652;
   // width: 240px;
   height: 40px;
   //   user-select: none;
@@ -91,10 +91,10 @@ export default {
   text-align: center;
   line-height: 30px;
 
-  box-shadow: 2px 2px 2px 0 rgba(40, 120, 255, 0.08),
-    2px -2px 2px 0 rgba(40, 120, 255, 0.08),
-    -2px -2px 2px 0 rgba(40, 120, 255, 0.08),
-    -2px 2px 2px 0 rgba(40, 120, 255, 0.08);
+  //   box-shadow: 2px 2px 2px 0 rgba(40, 120, 255, 0.08),
+  //     2px -2px 2px 0 rgba(40, 120, 255, 0.08),
+  //     -2px -2px 2px 0 rgba(40, 120, 255, 0.08),
+  //     -2px 2px 2px 0 rgba(40, 120, 255, 0.08);
 
   span {
     // user-select: none;
@@ -102,6 +102,7 @@ export default {
 }
 
 .active {
-  background-color: #c72923;
+  //   background-color: #c72923;
+  color: #217ec9;
 }
 </style>
