@@ -80,6 +80,7 @@
         :count="count"
         :task="task"
       />
+      <result-container :complete="complete" />
     </div>
   </div>
 </template>
@@ -94,6 +95,7 @@ import CategoryContainer from "./components/category-container";
 import SearchContainer from "./components/search-container";
 import CountContainer from "./components/count-container";
 import UserContainer from "./components/user-container";
+import ResultContainer from "./components/result-container";
 
 import Marker from "./config/marker";
 import Category from "./config/category";
@@ -122,6 +124,7 @@ export default {
       username: '',
       task: 0,
       word_tip: false,
+      complete: false,
     };
   },
 
@@ -135,6 +138,7 @@ export default {
     SearchContainer,
     CountContainer,
     UserContainer,
+    ResultContainer,
   },
 
   created() {
@@ -312,6 +316,10 @@ export default {
       });
       this.pointer += 1;
       this.category = null;
+
+      if (this.task && (this.count === this.task)) {
+        this.complete = true;
+      }
     },
 
     async onNetworkLogin(student_id) {
@@ -356,6 +364,11 @@ export default {
         this.visible = true;
         Cookies.setCookie('token', '');
         window.sessionStorage.setItem('username', '');
+        return;
+      }
+
+      if (data.data && !data.data.length) {
+        window.location.reload();
         return;
       }
 
@@ -525,8 +538,7 @@ export default {
 }
 
 .marker-list {
-  padding-top: 10px;
-  padding: 20px 30px 120px 30px;
+  padding: 50px 30px 120px;
 
   flex: 1;
   display: flex;

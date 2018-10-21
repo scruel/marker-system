@@ -2,7 +2,6 @@
   <section
     v-if="destroy"
     class="word-container"
-    :style="word.color"
   >
     <div
       ref="node"
@@ -136,7 +135,7 @@ export default {
 
   div {
     // cursor: move;
-    // border: 1px solid #ffffff;
+    border: 1px solid #ffffff;
     border-radius: 4px;
     padding: 10px 20px;
     color: #ffffff;
