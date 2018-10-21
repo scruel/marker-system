@@ -3,8 +3,6 @@
         class="category-container"
         :class="{active: active}"
         @click="handleCategory"
-        @mouseenter="onSelectShoot"
-        @mouseleave="onCancalShoot"
     >
         <span>{{category.name}}</span>
     </section>
@@ -72,8 +70,7 @@ export default {
 
         if (this.clicks) {
             this.active = false;
-        }
-        
+        }  
     },
   }
 }
