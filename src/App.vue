@@ -6,7 +6,14 @@
         @login="onStudentLogin"
         @error="onHandleError"
       />
-      <user-container :username="username" />
+      <div class="navbar-block">
+        <search-container
+          :word="word"
+          @search="onHandlerSearch"
+        />
+        <div class="username">{{UsernameProxy}}</div>
+        <user-container :username="username" />
+      </div>
       <div class="category-list">
         <div class="shadow-block">
           <div
@@ -25,10 +32,7 @@
             @category="onHandlerCategory"
           />
         </div>
-        <search-container
-          :word="word"
-          @search="onHandlerSearch"
-        />
+        <!-- <div /> -->
       </div>
       <div class="marker-list">
         <div class="shadow-block">
@@ -47,7 +51,15 @@
           :direction="false"
           @prev="onPrevWord"
         />
-        <word-container :word="word" />
+        <div class="word-block">
+          <word-container :word="word" />
+          <span
+            v-if="word_tip"
+            class="word-tip"
+          >
+            至多可选 4 个分类
+          </span>
+        </div>
         <switch-container
           :direction="true"
           @next="onNextWord"
@@ -80,8 +92,7 @@ import Marker from "./config/marker";
 import Category from "./config/category";
 
 import { login, subject, commit, mark, valid } from "./api/api";
-import Cookies from './lib/cookies';
-import category from './config/category';
+import Cookies from "./lib/cookies";
 
 export default {
   name: 'App',
@@ -103,6 +114,7 @@ export default {
       colors: ['#4caf50', '#607d8b', '#e24045', '#ffc700'], 
       username: '',
       task: 0,
+      word_tip: false,
     };
   },
 
@@ -124,8 +136,8 @@ export default {
    const count =  window.sessionStorage.getItem('count');
    const username = window.sessionStorage.getItem('username');
    const task = window.sessionStorage.getItem('task');
-   this.count = Number.parseInt(count);
-   this.task = Number.parseInt(task);
+   this.count = Number.parseInt(count) || 0;
+   this.task = Number.parseInt(task)  || 0;
    this.username = username;
 
    if (token) {
@@ -142,6 +154,20 @@ export default {
         this.onNetworkSubject(this.token);
       }
     },
+    word(n) {
+      // clearTimeout(this.timer);
+
+      if (n.mark_list && n.mark_list.length === 4) {
+        // this.word_tip = true;
+        // this.timer = setTimeout(() => {
+        //   this.word_tip = false;
+        // }, 300);
+        this.word_tip = true;
+        return;
+      }
+
+      this.word_tip = false;
+    },
   },
 
   computed: {
@@ -150,6 +176,9 @@ export default {
       
       return this.markers.filter(item => item.belong === this.category.name);
     },
+    UsernameProxy() {
+      return String.prototype.toUpperCase.apply(this.username);
+    }
   },
 
   methods: {
@@ -170,6 +199,7 @@ export default {
       }
 
       let instance = temp.find(item => item === marker.uuid);
+
       if (instance) {
         let ntemp = temp.filter(item => item !== marker.uuid);
         this.word = Object.assign({}, word, {
@@ -251,6 +281,7 @@ export default {
       };
 
       if (word.old_mark_list) {
+        this.answer[pointer] = word;
         mark_result = Object.assign({}, mark_result, {
           old_mark_list: word.old_mark_list,
         });
@@ -382,6 +413,36 @@ export default {
 //   // height: 100%;
 // }
 
+.navbar-block {
+  // position: fixed;
+  // top: 0px;
+  padding: 20px 40px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  // background-color: #1c74bf;
+  border-bottom: 1px solid #03ddff;
+  box-shadow: 2px 2px 2px 0 rgba(40, 120, 255, 0.08),
+    2px -2px 2px 0 rgba(40, 120, 255, 0.08),
+    -2px -2px 2px 0 rgba(40, 120, 255, 0.08),
+    -2px 2px 2px 0 rgba(40, 120, 255, 0.08);
+
+  .search-container {
+    margin-right: 10px;
+  }
+
+  .username {
+    display: block;
+    color: #2280ca;
+    height: 36px;
+    border-radius: 2px;
+    padding: 0px 20px;
+    line-height: 36px;
+
+    margin-right: 10px;
+  }
+}
+
 .shadow-block {
   display: flex;
   flex-wrap: wrap;
@@ -389,7 +450,7 @@ export default {
 }
 
 .category-list {
-  padding: 40px 40px 0px 40px;
+  padding: 20px 80px 0px 120px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -416,13 +477,35 @@ export default {
   // width: 200px;
   height: 120px;
 
-  padding: 10px 20px;
+  padding: 20px 40px;
   // background-color: #1e1e1e;
   background: linear-gradient(to bottom right, #135fab, #32a5ee);
 
   .word-container {
     margin-bottom: 10px;
-    margin-left: 10px;
+    // margin-left: 10px;
+  }
+
+  .word-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .word-tip {
+      position: absolute;
+      bottom: 10px;
+      padding: 5px 10px;
+      border-radius: 2px;
+      color: #ffffff;
+      font-size: 12px;
+      text-align: center;
+      background-color: #c72923;
+
+      box-shadow: 2px 2px 2px 0 rgba(40, 120, 255, 0.08),
+        2px -2px 2px 0 rgba(40, 120, 255, 0.08),
+        -2px -2px 2px 0 rgba(40, 120, 255, 0.08),
+        -2px 2px 2px 0 rgba(40, 120, 255, 0.08);
+    }
   }
 }
 
