@@ -7,9 +7,6 @@
         @error="onHandleError"
       />
       <user-container :username="username" />
-      <div class="word-list">
-        <word-container :word="word" />
-      </div>
       <div class="category-list">
         <div class="shadow-block">
           <div
@@ -28,14 +25,12 @@
             @category="onHandlerCategory"
           />
         </div>
-        <!-- <search-container @search="onHandlerSearch" /> -->
-        <div />
+        <search-container
+          :word="word"
+          @search="onHandlerSearch"
+        />
       </div>
       <div class="marker-list">
-        <switch-container
-          :direction="false"
-          @prev="onPrevWord"
-        />
         <div class="shadow-block">
           <marker-container
             v-for="(item, index) in MarkersProxy"
@@ -46,6 +41,13 @@
             @cancal="onCancalMarker"
           />
         </div>
+      </div>
+      <div class="word-list">
+        <switch-container
+          :direction="false"
+          @prev="onPrevWord"
+        />
+        <word-container :word="word" />
         <switch-container
           :direction="true"
           @next="onNextWord"
@@ -334,7 +336,7 @@ export default {
 
     async onNetworkMark(marker) {
       const { data } = await mark(marker).catch((error) => {});
-      
+
       if(data.status) {
         Cookies.setCookie('token', '');
         this.visible = true;
@@ -387,7 +389,7 @@ export default {
 }
 
 .category-list {
-  padding: 20px 40px;
+  padding: 40px 40px 0px 40px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -399,18 +401,20 @@ export default {
 }
 
 .word-list {
-  // position: fixed;
+  position: fixed;
+  bottom: 0px;
+  width: 100%;
   display: flex;
+  flex: 1;
   // flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   box-shadow: 2px 0px 4px 0 rgba(40, 120, 255, 0.08);
 
   font-size: 32px;
 
   // width: 200px;
   height: 120px;
-  top: 0px;
 
   padding: 10px 20px;
   // background-color: #1e1e1e;
@@ -424,7 +428,7 @@ export default {
 
 .marker-list {
   padding-top: 10px;
-  padding: 20px 30px;
+  padding: 20px 30px 120px 30px;
 
   flex: 1;
   display: flex;
@@ -437,15 +441,15 @@ export default {
     margin-left: 20px;
     margin-bottom: 10px;
   }
+}
 
-  .switch-container:nth-of-type(1) {
-    border-radius: 50%;
-    background-color: #288fd9;
-  }
+.switch-container:nth-of-type(1) {
+  border-radius: 50%;
+  background-color: #288fd9;
+}
 
-  .switch-container:nth-of-type(2) {
-    border-radius: 50%;
-    background-color: #288fd9;
-  }
+.switch-container:nth-of-type(2) {
+  border-radius: 50%;
+  background-color: #288fd9;
 }
 </style>

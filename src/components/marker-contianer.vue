@@ -152,4 +152,16 @@ export default {
     color: #ffffff;
   }
 }
+
+// .mclick {
+//   color: #3c9e44;
+//   // background-color: #3c9e44;
+//   border: 1px solid #3c9e44;
+
+//   span:nth-of-type(2) {
+//     display: block;
+//     font-size: 14px;
+//     color: #3c9e44;
+//   }
+// }
 </style>

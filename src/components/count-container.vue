@@ -29,7 +29,7 @@ export default {
 <style lang="scss" scope>
 .count-container {
   position: fixed;
-  bottom: 20px;
+  bottom: 120px;
   right: 20px;
 
   width: 90px;

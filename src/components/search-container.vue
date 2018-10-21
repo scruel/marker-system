@@ -1,17 +1,17 @@
 <template>
-    <section class="search-container">
-        <div class="input-item">
-            <input
-                type="text"
-                v-model="keyword"
-            >
-        </div>
-        <img
-            src="../assets/image/search.png"
-            alt=""
-            @click="handlerSearch"
-        >
-    </section>
+  <section class="search-container">
+    <div class="input-item">
+      <input
+        type="text"
+        v-model="keyword"
+      >
+    </div>
+    <img
+      src="../assets/image/search.png"
+      alt=""
+      @click="handlerSearch"
+    >
+  </section>
 </template>
     
 <script>
@@ -26,7 +26,18 @@ export default {
       value: {
           type: String,
           default: '',
+      },
+
+      word: {
+        type: Object,
+        default: () => ({}),
       }
+  },
+
+  watch: {
+    word(n) {
+      this.keyword = n.word
+    }
   },
 
   methods: {
@@ -40,7 +51,8 @@ export default {
         //   }
 
         //   this.$emit('search', this.keyword)
-        window.location.href = `https://www.baidu.com`
+        const { keyword } = this;
+        window.location.href = `https://www.baidu.com/s?wd=${keyword}`
       }
   }
 }
@@ -48,9 +60,10 @@ export default {
     
 <style lang="scss" scope>
 .search-container {
-  padding: 5px 10px;
+  padding: 0px 10px;
   display: flex;
   align-items: center;
+  margin-bottom: 10px;
   border-radius: 4px;
   box-shadow: 2px 2px 2px 0 rgba(40, 120, 255, 0.08),
     2px -2px 2px 0 rgba(40, 120, 255, 0.08),
@@ -64,7 +77,7 @@ export default {
       outline: 0px;
       color: #616366;
       font-size: 16px;
-      border-bottom: 1px solid #e2e2e2;
+      // border-bottom: 1px solid #e2e2e2;
     }
   }
 
