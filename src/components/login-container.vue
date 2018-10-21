@@ -4,6 +4,7 @@
         class="login-container"
     >
         <div class="login-block">
+            <h3>微云问卷</h3>
             <div class="input-item">
                 <span>学号</span>
                 <input
@@ -78,6 +79,11 @@ export default {
     background-color: #ffffff;
     font-size: 18px;
     box-shadow: 2px 2px 4px #3ba3ff;
+
+    h3 {
+      text-align: center;
+      color: #616366;
+    }
 
     .input-item {
       display: flex;

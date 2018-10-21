@@ -55,7 +55,10 @@
         :message="message"
         ref="tip"
       />
-      <count-container :count="count" />
+      <count-container
+        :count="count"
+        :task="task"
+      />
     </div>
   </div>
 </template>
@@ -74,7 +77,7 @@ import UserContainer from "./components/user-container";
 import Marker from "./config/marker";
 import Category from "./config/category";
 
-import { login, subject, commit, mark } from "./api/api";
+import { login, subject, commit, mark, valid } from "./api/api";
 import Cookies from './lib/cookies';
 import category from './config/category';
 
@@ -97,6 +100,7 @@ export default {
       count: 0,
       colors: ['#4caf50', '#607d8b', '#e24045', '#ffc700'], 
       username: '',
+      task: 0,
     };
   },
 
@@ -117,12 +121,15 @@ export default {
 
    const count =  window.sessionStorage.getItem('count');
    const username = window.sessionStorage.getItem('username');
+   const task = window.sessionStorage.getItem('task');
    this.count = Number.parseInt(count);
+   this.task = Number.parseInt(task);
    this.username = username;
 
    if (token) {
      this.visible = false;
      this.token = token;
+     this.onNetworkValid(token);
      this.onNetworkSubject(token);
    }
   },
@@ -287,6 +294,8 @@ export default {
       this.token = data.token;
       window.sessionStorage.setItem('username', student_id);
       this.count = data.action_cnt;
+      this.task = data.require_cnt;
+      window.sessionStorage.setItem('task', data.require_cnt);
       // 获取题目
       this.onNetworkSubject(data.token);
     },
@@ -300,6 +309,13 @@ export default {
       ).catch((error) => {
         this.visible = true;
       });
+
+      if (data.status) {
+        this.visible = true;
+        Cookies.setCookie('token', '');
+        window.sessionStorage.setItem('username', '');
+        return;
+      }
 
       const temp = data.data.filter(id => !!id).map(item =>  Object.assign({}, item, {
         count: 0,
@@ -316,15 +332,34 @@ export default {
       });
     },
 
-    async onNetworkCommit(answer) {
-      const { data } = await commit(answer).catch((error) => {
-        
-      });
-    },
-
     async onNetworkMark(marker) {
       const { data } = await mark(marker).catch((error) => {});
-    }
+      
+      if(data.status) {
+        Cookies.setCookie('token', '');
+        this.visible = true;
+        return;
+      }
+    },
+
+    async onNetworkValid(token) {
+      const { data } = await valid({
+        token,
+      }).catch((err) => {
+        console.log('====================================');
+        console.log(err);
+        console.log('====================================');
+      });
+
+      if(data.status) {
+        Cookies.setCookie('token', '');
+        this.visible = true;
+        return;
+      }
+
+      // this.token = data.token;
+      this.count = data.action_cnt;
+    },
   },
 };
 </script>

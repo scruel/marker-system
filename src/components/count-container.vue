@@ -1,7 +1,7 @@
 <template>
   <section class="count-container">
     <div>
-      <span>{{count}}</span>
+      <span>{{count}}/{{task}}</span>
       <span>(已标记词汇)</span>
     </div>
   </section>
@@ -15,6 +15,10 @@ export default {
 
   props: {
       count: {
+          type: Number,
+          default: 0,
+      },
+      task: {
           type: Number,
           default: 0,
       }
