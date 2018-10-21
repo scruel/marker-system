@@ -40,7 +40,7 @@ export default {
 
     word(n, o) {
       if (n.id != o.id) {
-        this.isClick = false;
+        this.onValidClick(this.marker);
       }
     }
   },
@@ -77,6 +77,7 @@ export default {
 
     onValidClick(marker) {
       if (!this.word.mark_list) {
+        this.isClick = false;
         return;
       }
 

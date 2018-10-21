@@ -2,6 +2,7 @@
   <section
     v-if="destroy"
     class="word-container"
+    :style="word.color"
   >
     <div
       ref="node"

@@ -6,6 +6,7 @@
         @login="onStudentLogin"
         @error="onHandleError"
       />
+      <user-container :username="username" />
       <div class="word-list">
         <word-container :word="word" />
       </div>
@@ -68,6 +69,7 @@ import SwitchContainer from "./components/switch-container";
 import CategoryContainer from "./components/category-container";
 import SearchContainer from "./components/search-container";
 import CountContainer from "./components/count-container";
+import UserContainer from "./components/user-container";
 
 import Marker from "./config/marker";
 import Category from "./config/category";
@@ -94,6 +96,7 @@ export default {
       message: '',
       count: 0,
       colors: ['#4caf50', '#607d8b', '#e24045', '#ffc700'], 
+      username: '',
     };
   },
 
@@ -106,12 +109,16 @@ export default {
     CategoryContainer,
     SearchContainer,
     CountContainer,
+    UserContainer,
   },
 
   created() {
    const token =  Cookies.getCookie('token');
 
    const count =  window.sessionStorage.getItem('count');
+   const username = window.sessionStorage.getItem('username');
+   this.count = count;
+   this.username = username;
 
    if (token) {
      this.visible = false;
@@ -122,10 +129,10 @@ export default {
 
   watch: {
     pointer(n) {
-      if (!(n % 75)) {
+      if (n && !(n % 75)) {
         this.onNetworkSubject(this.token);
       }
-    }
+    },
   },
 
   computed: {
@@ -204,21 +211,21 @@ export default {
     },
 
     onPrevWord() {
-      const { pointer, words } = this;
-      
-      if (0 < pointer) {
+      let { pointer, answer } = this;
+
+      if (0 >= pointer) {
         return;
       }
+
+      pointer -= 1;
       
-      const work = this.words[pointer - 1];
-      let temp = [];
-
-      for (let i = 0; i < 4; i++) {
-        temp.push(word);
-      }
-
-      this.select = temp;
-      this.pointer -= 1;
+      let temp  = answer[pointer];
+      this.word = Object.assign({}, temp, {
+        old_mark_list: [].concat(temp.mark_list) ,
+      });
+      
+      this.pointer = pointer;
+      this.category = null;
     },
 
     onNextWord() {
@@ -228,18 +235,34 @@ export default {
         return;
       }
 
-      this.answer.push(word);
-
-      this.onNetworkMark({
+      let mark_result = {
         token,
         word_id: word.id,
         mark_list: word.mark_list || [],
-      });
+      };
 
-      this.word = words[pointer + 1];
+      if (word.old_mark_list) {
+        mark_result = Object.assign({}, mark_result, {
+          old_mark_list: word.old_mark_list,
+        });
+      } else {
+        this.answer.push(word);
+        this.count += 1;        
+        window.sessionStorage.setItem('count', this.count);
+      }
+
+      this.onNetworkMark(mark_result);
+
+      this.word = pointer + 1 < this.answer.length ? Object.assign({}, this.answer[pointer + 1], {
+        old_mark_list: [].concat(this.answer[pointer + 1].mark_list),
+      }) : Object.assign({}, words[pointer + 1], {
+        mark_list: [],
+        color: {
+          'background-color': this.colors[(pointer + 1) % 4]
+        },
+      });
       this.pointer += 1;
-      this.count += 1;
-      window.sessionStorage.setItem('count', this.count);
+      this.category = null;
     },
 
     async onNetworkLogin(student_id) {
@@ -254,7 +277,9 @@ export default {
 
       Cookies.setCookie('token', data.token);
       this.visible = false;
+      this.username = student_id,
       this.token = data.token;
+      window.sessionStorage.setItem('username', student_id);
       this.count = data.action_cnt;
       // 获取题目
       this.onNetworkSubject(data.token);
@@ -280,7 +305,9 @@ export default {
       }
 
       this.words = temp;
-      this.word = temp[0];
+      this.word = Object.assign({}, temp[0], {
+        mark_list: [],
+      });
     },
 
     async onNetworkCommit(answer) {

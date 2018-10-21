@@ -31,7 +31,11 @@ export default {
 
   methods: {
       handlerClick() {
-         this.direction ? this.$emit('next') : this.$emit('prev'); 
+        if (this.direction) {
+          this.$emit('next');
+        }
+        
+        this.$emit('prev'); 
       },
   },
 }
