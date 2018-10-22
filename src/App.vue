@@ -156,6 +156,7 @@ export default {
       task: 0,
       word_tip: false,
       complete: false,
+      log_time: 0,
     };
   },
 
@@ -344,6 +345,17 @@ export default {
     },
 
     onNextWord() {
+      const timestamp = new Date().getTime();
+
+      if (timestamp - this.log_time < 2000) {
+        this.message = '操作太频繁, 请稍等';
+        this.log_time = timestamp;
+        this.$refs.tip.handlerError();
+        return;
+      }
+
+      this.log_time = timestamp;
+
       const { pointer, words, word, token } = this;
 
       if (pointer >= words.length) {
