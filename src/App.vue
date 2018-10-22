@@ -436,7 +436,12 @@ export default {
         this.$refs.tip.handlerError();
       });
 
-      if (data.status) {
+      if (data.status === 1) {
+        this.complete = true;
+        return;
+      }
+
+      if (data.status !== 0) {
         this.message = data.msg;
         this.$refs.tip.handlerError();
         return;
