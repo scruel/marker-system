@@ -82,13 +82,14 @@ export default {
   .header {
     display: flex;
     align-items: center;
-    justify-content: center;
+    // justify-content: center;
     margin-bottom: 10px;
+    padding: 0px 10px;
 
     img {
       width: 40px;
       height: 40px;
-      margin-right: 10px;
+      margin-right: 38px;
     }
   }
   .login-block {
