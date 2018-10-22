@@ -6,8 +6,12 @@
         @login="onStudentLogin"
         @error="onHandleError"
       />
-      <div class="navbar-block">
-        <div class="shadow-block">
+      <div
+        class="navbar-block"
+      >
+        <div
+          class="shadow-block"
+        >
           <img
             class="logo"
             src="./assets/image/logo.png"
@@ -29,21 +33,28 @@
             @category="onHandlerCategory"
           />
         </div>
-        <div class="shadow-block">
+        <div
+          class="shadow-block"
+        >
           <search-container
             :word="word"
+            :category="category"
             @search="onHandlerSearch"
           />
-          <div class="username">{{username}}</div>
-          <user-container />
+          <div
+            class="username"
+          >{{username}}</div>
+          <user-container/>
         </div>
       </div>
       <!-- <div class="category-list">
         <div class="shadow-block">
         </div>
         <div />
-      </div> -->
-      <div class="marker-list">
+      </div>-->
+      <div
+        class="marker-list"
+      >
         <marker-container
           v-for="(item, index) in MarkersProxy"
           :key="index"
@@ -57,15 +68,18 @@
         <switch-container
           :direction="false"
           @prev="onPrevWord"
+          :class="{forbid: !pointer}"
         />
-        <div class="word-block">
-          <word-container :word="word" />
+        <div
+          class="word-block"
+        >
+          <word-container
+            :word="word"
+          />
           <span
             v-if="word_tip"
             class="word-tip"
-          >
-            至多可选 4 个分类
-          </span>
+          >至多可选 4 个分类</span>
         </div>
         <switch-container
           :direction="true"
@@ -80,7 +94,11 @@
         :count="count"
         :task="task"
       />
-      <result-container :complete="complete" />
+      <result-container
+        :complete="complete"
+        @complete="onHandleComplete"
+        @answer="onHandleNextAnswer"
+      />
     </div>
   </div>
 </template>
@@ -88,20 +106,20 @@
 <script>
 import MarkerContainer from './components/marker-contianer';
 import WordContainer from './components/word-container';
-import LoginContainer from "./components/login-container";
-import TipContainer from "./components/tip-container";
-import SwitchContainer from "./components/switch-container";
-import CategoryContainer from "./components/category-container";
-import SearchContainer from "./components/search-container";
-import CountContainer from "./components/count-container";
-import UserContainer from "./components/user-container";
-import ResultContainer from "./components/result-container";
+import LoginContainer from './components/login-container';
+import TipContainer from './components/tip-container';
+import SwitchContainer from './components/switch-container';
+import CategoryContainer from './components/category-container';
+import SearchContainer from './components/search-container';
+import CountContainer from './components/count-container';
+import UserContainer from './components/user-container';
+import ResultContainer from './components/result-container';
 
-import Marker from "./config/marker";
-import Category from "./config/category";
+import Marker from './config/marker';
+import Category from './config/category';
 
-import { login, subject, commit, mark, valid } from "./api/api";
-import Cookies from "./lib/cookies";
+import { login, subject, commit, mark, valid } from './api/api';
+import Cookies from './lib/cookies';
 
 export default {
   name: 'App',
@@ -120,7 +138,7 @@ export default {
       answer: [],
       message: '',
       count: 0,
-      colors: ['#4caf50', '#607d8b', '#e24045', '#ffc700'], 
+      colors: ['#4caf50', '#607d8b', '#e24045', '#ffc700'],
       username: '',
       task: 0,
       word_tip: false,
@@ -142,26 +160,32 @@ export default {
   },
 
   created() {
-   const token =  Cookies.getCookie('token');
+    const token = Cookies.getCookie('token');
 
-   const count =  window.sessionStorage.getItem('count');
-   const username = window.sessionStorage.getItem('username');
-   const task = window.sessionStorage.getItem('task');
-   this.count = Number.parseInt(count) || 0;
-   this.task = Number.parseInt(task)  || 0;
-   this.username = username;
+    const count = window.sessionStorage.getItem('count');
+    const username = window.sessionStorage.getItem('username');
+    const task = window.sessionStorage.getItem('task');
+    this.count = Number.parseInt(count) || 0;
+    this.task = Number.parseInt(task) || 0;
+    this.username = username;
 
-   if (token) {
-     this.visible = false;
-     this.token = token;
-     this.onNetworkValid(token);
-     this.onNetworkSubject(token);
-   }
+    if (this.count >= this.task) {
+      this.complete = true;
+    }
+
+    if (token) {
+      this.visible = false;
+      this.token = token;
+      this.onNetworkValid({
+        token,
+      });
+      this.onNetworkSubject(token);
+    }
   },
 
   watch: {
     pointer(n) {
-      if (n && !(n % 75)) {
+      if (n && this.words.length - n < 20) {
         this.onNetworkSubject(this.token);
       }
     },
@@ -184,12 +208,17 @@ export default {
   computed: {
     MarkersProxy() {
       if (!this.category) return this.markers;
-      
+
       return this.markers.filter(item => item.belong === this.category.name);
     },
     // UsernameProxy() {
     //   return String.prototype.toUpperCase.apply(this.username);
     // }
+  },
+
+  destroyed() {
+    document.onkeydown = null;
+    this.timer = null;
   },
 
   methods: {
@@ -229,8 +258,7 @@ export default {
       this.marker = null;
     },
 
-    onBuildAnswer(serial) {
-    },
+    onBuildAnswer(serial) {},
 
     onHandleError(error) {
       const { message } = error;
@@ -247,7 +275,7 @@ export default {
         this.category = null;
         return;
       }
-      
+
       if (this.category && this.category.name == category.name) {
         this.category = null;
         return;
@@ -270,19 +298,20 @@ export default {
       answer[pointer] = word;
 
       pointer -= 1;
-      
-      let temp  = answer[pointer];
+
+      let temp = answer[pointer];
+
       this.word = Object.assign({}, temp, {
-        old_mark_list: [].concat(temp.mark_list) ,
+        old_mark_list: [].concat(temp.mark_list),
       });
-      
+
       this.pointer = pointer;
       this.category = null;
     },
 
     onNextWord() {
       const { pointer, words, word, token } = this;
-      
+
       if (pointer >= words.length) {
         return;
       }
@@ -300,39 +329,80 @@ export default {
         });
       } else {
         this.answer.push(word);
-        this.count += 1;        
+        this.count += 1;
         window.sessionStorage.setItem('count', this.count);
       }
 
       this.onNetworkMark(mark_result);
 
-      this.word = pointer + 1 < this.answer.length ? Object.assign({}, this.answer[pointer + 1], {
-        old_mark_list: [].concat(this.answer[pointer + 1].mark_list),
-      }) : Object.assign({}, words[pointer + 1], {
-        mark_list: [],
-        color: {
-          'background-color': this.colors[(pointer + 1) % 4]
-        },
-      });
+      if (pointer + 1 < this.answer.length) {
+        let temp = {};
+
+        if (this.answer[pointer + 1].ord_mark_list) {
+          temp = Object.assign({}, this.answer[pointer + 1], {
+            old_mark_list: [].concat(this.answer[pointer + 1].mark_list),
+          });
+        } else {
+          temp = this.answer.pop();
+        }
+
+        this.word = temp;
+      } else {
+        this.word = Object.assign({}, words[pointer + 1], {
+          mark_list: [],
+          color: {
+            'background-color': this.colors[(pointer + 1) % 4],
+          },
+        });
+      }
+
       this.pointer += 1;
       this.category = null;
 
-      if (this.task && (this.count === this.task)) {
+      if (this.task && this.count === this.task) {
         this.complete = true;
       }
     },
 
-    async onNetworkLogin(student_id) {
-      const { data } = await login(
-        {
-          student_id,
+    onKeydownEvent() {
+      document.onkeydown = event => {
+        if (event.keyCode === 39) {
+          if (this.timer) {
+            clearTimeout(this.timer);
+          }
+
+          this.timer = setTimeout(() => {
+            this.onNextWord();
+          }, 200);
         }
-      ).catch((error) => {
+        if (event.keyCode === 37) {
+          this.onPrevWord();
+        }
+      };
+    },
+
+    onHandleComplete() {
+      this.onNetworkCommit(this.token);
+    },
+
+    onHandleNextAnswer() {
+      const { token } = this;
+
+      this.onNetworkCommit({
+        token,
+        more_require_cnt: 50,
+      });
+    },
+
+    async onNetworkLogin(username) {
+      const { data } = await login({
+        username,
+      }).catch(error => {
         this.message = '抱歉，你无权进行数据标记';
         this.$refs.tip.handlerError();
       });
 
-      if(data.status) {
+      if (data.status) {
         this.message = data.msg;
         this.$refs.tip.handlerError();
         return;
@@ -340,23 +410,28 @@ export default {
 
       Cookies.setCookie('token', data.token);
       this.visible = false;
-      this.username = student_id,
+      this.username = username;
       this.token = data.token;
-      window.sessionStorage.setItem('username', student_id);
+      window.sessionStorage.setItem('username', username);
       this.count = data.action_cnt;
       this.task = data.require_cnt;
       window.sessionStorage.setItem('task', data.require_cnt);
+
+      if (data.action_cnt >= data.require_cnt) {
+        this.complete = true;
+        return;
+      }
+
+      this.onKeydownEvent();
       // 获取题目
       this.onNetworkSubject(data.token);
     },
 
-    async onNetworkSubject(token, count = 100) {
-      const { data } = await subject(
-        {
-          token,
-          count, 
-        }
-      ).catch((error) => {
+    async onNetworkSubject(token, count = 50) {
+      const { data } = await subject({
+        token,
+        count,
+      }).catch(error => {
         this.visible = true;
       });
 
@@ -372,11 +447,13 @@ export default {
         return;
       }
 
-      const temp = data.data.filter(id => !!id).map(item =>  Object.assign({}, item, {
-        count: 0,
-      }));
+      const temp = data.data.filter(id => !!id).map(item =>
+        Object.assign({}, item, {
+          count: 0,
+        }),
+      );
 
-      if(this.pointer > 1) {
+      if (this.pointer > 0) {
         this.words = this.words.concat(temp);
         return;
       }
@@ -388,25 +465,23 @@ export default {
     },
 
     async onNetworkMark(marker) {
-      const { data } = await mark(marker).catch((error) => {});
+      const { data } = await mark(marker).catch(error => {});
 
-      if(data.status) {
+      if (data.status) {
         Cookies.setCookie('token', '');
         this.visible = true;
         return;
       }
     },
 
-    async onNetworkValid(token) {
-      const { data } = await valid({
-        token,
-      }).catch((err) => {
+    async onNetworkValid(entity) {
+      const { data } = await valid(entity).catch(err => {
         console.log('====================================');
         console.log(err);
         console.log('====================================');
       });
 
-      if(data.status) {
+      if (data.status) {
         Cookies.setCookie('token', '');
         this.visible = true;
         return;
@@ -414,6 +489,26 @@ export default {
 
       // this.token = data.token;
       this.count = data.action_cnt;
+      this.onKeydownEvent();
+    },
+
+    async onNetworkCommit(entity) {
+      const { data } = await commit(entity).catch(err => {
+        console.log('====================================');
+        console.log(err);
+        console.log('====================================');
+      });
+
+      if (entity.more_require_cnt) {
+        this.onNetworkSubject(entity.token, entity.more_require_cnt);
+        this.complete = false;
+        this.task = this.task + 50;
+        window.sessionStorage.setItem('task', this.task);
+        return;
+      }
+
+      Cookies.setCookie('token', '');
+      window.location.reload();
     },
   },
 };
@@ -561,5 +656,9 @@ export default {
 .switch-container:nth-of-type(2) {
   border-radius: 50%;
   background-color: #288fd9;
+}
+
+.forbid {
+  background-color: #c72923 !important;
 }
 </style>

@@ -11,15 +11,44 @@ let loading;
 let timer;
 
 instance.interceptors.request.use(
-  config => config,
+  config => {
+    if (timer) {
+      clearTimeout(timer);
+    }
 
-  error => Promise.reject(error),
+    timer = setTimeout(() => {
+      window.vm.$loading();
+    }, 500);
+
+    return config;
+  },
+
+  error => {
+    if (timer) {
+      clearTimeout(timer);
+    }
+    window.vm.$loading();
+    return Promise.reject(error);
+  },
 );
 
 instance.interceptors.response.use(
-  response => response,
+  response => {
+    if (timer) {
+      clearTimeout(timer);
+    }
+    window.vm.$loading.close();
+    return response;
+  },
 
-  error => Promise.reject(error),
+  error => {
+    if (timer) {
+      clearTimeout(timer);
+    }
+
+    window.vm.$loading.close();
+    return Promise.reject(error);
+  },
 );
 
 export default instance;

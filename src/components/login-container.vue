@@ -1,58 +1,58 @@
 <template>
-    <section
-        v-if="visible"
-        class="login-container"
-    >
-        <div class="login-block">
-            <h3>微云问卷</h3>
-            <div class="input-item">
-                <span>学号</span>
-                <input
-                    type="text"
-                    v-model="student"
-                >
-            </div>
-            <div
-                class="button-item"
-                @click="handlerLogin"
-            >
-                <span>登录</span>
-            </div>
-        </div>
-    </section>
+  <section
+    v-if="visible"
+    class="login-container"
+  >
+    <div class="login-block">
+      <h3>微云问卷</h3>
+      <div class="input-item">
+        <span>用户名</span>
+        <input
+          type="text"
+          v-model="student"
+        >
+      </div>
+      <div
+        class="button-item"
+        @click="handlerLogin"
+      >
+        <span>登录</span>
+      </div>
+    </div>
+  </section>
 </template>
     
 <script>
 export default {
   data() {
     return {
-        student:  '',
-    }
+      student: '',
+    };
   },
 
   props: {
-      visible: {
-          type: Boolean,
-          default: true,
-      },
+    visible: {
+      type: Boolean,
+      default: true,
+    },
   },
 
   methods: {
-      handlerLogin() {
-          const { student } = this;
+    handlerLogin() {
+      const { student } = this;
 
-          if (!student) {
-              this.$emit('error', {
-                  message:  '请输入学号 ！',
-              });
+      if (!student) {
+        this.$emit('error', {
+          message: '请输入学号 ！',
+        });
 
-              return;
-          }
-
-          this.$emit('login', student);
+        return;
       }
-  }
-}
+
+      this.$emit('login', student);
+    },
+  },
+};
 </script>
     
 <style lang="scss" scope>
@@ -71,7 +71,7 @@ export default {
   width: 100%;
   height: 100%;
   background: linear-gradient(to bottom right, #135fab, #32a5ee);
-  border-radius: 6px;
+  //   border-radius: 6px;
 
   .login-block {
     border-radius: 4px;
