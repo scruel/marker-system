@@ -83,7 +83,7 @@ export default {
     display: flex;
     align-items: center;
     // justify-content: center;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
     padding: 0px 10px;
 
     img {
@@ -102,6 +102,7 @@ export default {
     h3 {
       text-align: center;
       color: #616366;
+      font-size: 16px;
     }
 
     .input-item {

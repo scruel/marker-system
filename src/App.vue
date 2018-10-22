@@ -112,6 +112,11 @@
         @complete="onHandleComplete"
         @answer="onHandleNextAnswer"
       />
+      <commit-container
+        :commit="commit"
+        @commit="onHanlerCommit"
+        @close="onHanlerClose"
+      />
     </div>
   </div>
 </template>
@@ -127,6 +132,7 @@ import SearchContainer from './components/search-container';
 import CountContainer from './components/count-container';
 import UserContainer from './components/user-container';
 import ResultContainer from './components/result-container';
+import CommitContainer from './components/commit-container';
 
 import Marker from './config/marker';
 import Category from './config/category';
@@ -157,6 +163,7 @@ export default {
       word_tip: false,
       complete: false,
       log_time: 0,
+      commit: false,
     };
   },
 
@@ -171,6 +178,7 @@ export default {
     CountContainer,
     UserContainer,
     ResultContainer,
+    CommitContainer,
   },
 
   created() {
@@ -347,12 +355,19 @@ export default {
     onNextWord() {
       const timestamp = new Date().getTime();
 
-      if (timestamp - this.log_time < 2000) {
+      if (timestamp - this.log_time < 1200) {
         this.message = '操作太频繁, 请稍等';
         this.log_time = timestamp;
         this.$refs.tip.handlerError();
         return;
       }
+
+      if (!this.commit && this.count + 1 === this.task) {
+        this.commit = true;
+        return;
+      }
+
+      this.commit = false;
 
       this.log_time = timestamp;
 
@@ -410,6 +425,14 @@ export default {
       }
     },
 
+    onHanlerCommit() {
+      this.onNextWord();
+    },
+
+    onHanlerClose() {
+      this.commit = false;
+    },
+
     onKeydownEvent() {
       document.onkeydown = event => {
         if (this.timer) {
@@ -419,7 +442,7 @@ export default {
         if (event.keyCode === 39) {
           this.timer = setTimeout(() => {
             this.onNextWord();
-          }, 2000);
+          }, 1200);
         }
 
         if (event.keyCode === 37) {
