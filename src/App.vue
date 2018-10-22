@@ -440,6 +440,9 @@ export default {
         }
 
         if (event.keyCode === 39) {
+          if (this.count >= this.task) {
+            return;
+          }
           this.timer = setTimeout(() => {
             this.onNextWord();
           }, 200);
