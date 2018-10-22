@@ -289,6 +289,7 @@ export default {
       pointer -= 1;
 
       let temp = answer[pointer];
+
       this.word = Object.assign({}, temp, {
         old_mark_list: [].concat(temp.mark_list),
       });
