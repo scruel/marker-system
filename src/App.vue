@@ -442,7 +442,7 @@ export default {
         if (event.keyCode === 39) {
           this.timer = setTimeout(() => {
             this.onNextWord();
-          }, 1000);
+          }, 200);
         }
 
         if (event.keyCode === 37) {
