@@ -523,6 +523,7 @@ export default {
       }
 
       // this.token = data.token;
+      this.username = data.username;
       this.count = data.action_cnt;
       this.task = data.require_cnt;
       window.sessionStorage.setItem('count', data.action_cnt);
