@@ -1,16 +1,23 @@
 <template>
-  <section class="search-container">
+  <section
+    class="search-container"
+  >
     <div class="input-item">
       <input
         type="text"
+        :placeholder="placeholder"
         v-model="keyword"
       >
     </div>
-    <img
-      src="../assets/image/search.png"
-      alt=""
-      @click="handlerSearch"
+    <a
+      :href="HrefProxy"
+      target="view_window"
     >
+      <img
+        src="../assets/image/search.png"
+        alt=""
+      >
+    </a>
   </section>
 </template>
     
@@ -18,44 +25,72 @@
 export default {
   data() {
     return {
-        keyword: '',
-    }
+      keyword: '',
+      href: '',
+      placeholder: '',
+    };
   },
 
   props: {
-      value: {
-          type: String,
-          default: '',
-      },
+    value: {
+      type: String,
+      default: '',
+    },
 
-      word: {
-        type: Object,
-        default: () => ({}),
-      }
+    word: {
+      type: Object,
+      default: () => ({}),
+    },
+
+    category: {
+      type: Object,
+      default: () => ({}),
+    },
   },
 
   watch: {
     word(n) {
-      this.keyword = n.word
-    }
+      this.keyword = '';
+      this.placeholder = n.word;
+    },
+
+    category(n) {
+      this.keyword = '';
+
+      if (n) {
+        this.placeholder = this.word.word + ' ' + n.name;
+        return;
+      }
+
+      this.placeholder = this.word.word;
+    },
+  },
+
+  computed: {
+    HrefProxy() {
+      const { keyword, placeholder } = this;
+
+      if (keyword) {
+        return `https://www.baidu.com/s?wd=${keyword}`;
+      }
+
+      return `https://www.baidu.com/s?wd=${placeholder}`;
+    },
   },
 
   methods: {
-      handlerChange(e) {
-        this.$emit('input', e.target.value);
-      },
+    handlerChange(e) {
+      this.$emit('input', e.target.value);
+    },
 
-      handlerSearch() {
-        //   if (!this.keyword) {
-        //       return;
-        //   }
-
-        //   this.$emit('search', this.keyword)
-        const { keyword } = this;
-        window.location.href = `https://www.baidu.com/s?wd=${keyword}`
-      }
-  }
-}
+    handlerSearch() {
+      //   if (!this.keyword) {
+      //       return;
+      //   }
+      //   this.$emit('search', this.keyword)
+    },
+  },
+};
 </script>
     
 <style lang="scss" scope>

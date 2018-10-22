@@ -1,17 +1,24 @@
 <template>
-    <section
-        v-if="complete"
-        class="result-container"
-    >
-        <dir class="modal" />
-        <div class="icon-tip">
-            <img
-                src="../assets/image/check.png"
-                alt=""
-            >
-            <span @click="onHandleExit">任务达成</span>
-        </div>
-    </section>
+  <section
+    v-if="complete"
+    class="result-container"
+  >
+    <dir class="modal"/>
+    <div class="icon-tip">
+      <img
+        src="../assets/image/check.png"
+        alt=""
+      >
+      <div>
+        <span
+          @click="onHandleExit"
+        >任务达成</span>
+        <span
+          @click="onHanleQuestionNext"
+        >再来 50 词</span>
+      </div>
+    </div>
+  </section>
 </template>
     
 <script>
@@ -19,23 +26,26 @@ import Cookies from '../lib/cookies';
 
 export default {
   data() {
-    return {}
+    return {};
   },
 
   props: {
     complete: {
-        type: Boolean,
-        default: false,
+      type: Boolean,
+      default: false,
     },
   },
 
   methods: {
-      onHandleExit() {
-          Cookies.setCookie('token', '');
-          window.location.reload();
-      }
-  }
-}
+    onHandleExit() {
+      this.$emit('complete');
+    },
+
+    onHanleQuestionNext() {
+      this.$emit('answer');
+    },
+  },
+};
 </script>
     
 <style lang="scss" scope>
@@ -62,7 +72,7 @@ export default {
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 360px;
+    width: 300px;
     //   height: 240px;
     background-color: #ffffff;
     border-radius: 10px;
@@ -72,14 +82,30 @@ export default {
       -2px -2px 2px 0 rgba(40, 120, 255, 0.08),
       -2px 2px 2px 0 rgba(40, 120, 255, 0.08);
 
+    div {
+      border-top: 1px solid #03ddff;
+      width: 100%;
+      text-align: center;
+    }
+
     span {
       cursor: pointer;
-      display: block;
-      width: 100%;
+      display: inline-block;
       font-size: 24px;
       text-align: center;
-      padding: 20px 0px;
-      border-top: 1px solid #03ddff;
+      padding: 20px 10px;
+    }
+
+    span:nth-of-type(1) {
+      color: #c72923;
+    }
+
+    span:nth-of-type(2) {
+      color: #1296db;
+    }
+
+    span + span {
+      border-left: 1px solid rgba(226, 226, 226, 1);
     }
   }
 }

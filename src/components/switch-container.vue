@@ -1,5 +1,7 @@
 <template>
-  <section class="switch-container">
+  <section
+    class="switch-container"
+  >
     <img
       v-if="!direction"
       src="../assets/image/left-circle.png"
@@ -19,26 +21,26 @@
 <script>
 export default {
   data() {
-    return {}
+    return {};
   },
 
   props: {
     direction: {
-        type: Boolean,
-        default: false,
+      type: Boolean,
+      default: false,
     },
   },
 
   methods: {
-      handlerClick() {
-        if (this.direction) {
-          this.$emit('next');
-        }
-        
-        this.$emit('prev'); 
-      },
+    handlerClick() {
+      if (this.direction) {
+        this.$emit('next');
+      }
+
+      this.$emit('prev');
+    },
   },
-}
+};
 </script>
     
 <style lang="scss" scope>

@@ -38,6 +38,7 @@
         >
           <search-container
             :word="word"
+            :category="category"
             @search="onHandlerSearch"
           />
           <div
@@ -67,6 +68,7 @@
         <switch-container
           :direction="false"
           @prev="onPrevWord"
+          :class="{forbid: !pointer}"
         />
         <div
           class="word-block"
@@ -94,6 +96,8 @@
       />
       <result-container
         :complete="complete"
+        @complete="onHandleComplete"
+        @answer="onHandleNextAnswer"
       />
     </div>
   </div>
@@ -172,14 +176,16 @@ export default {
     if (token) {
       this.visible = false;
       this.token = token;
-      this.onNetworkValid(token);
+      this.onNetworkValid({
+        token,
+      });
       this.onNetworkSubject(token);
     }
   },
 
   watch: {
     pointer(n) {
-      if (n && !(n % 75)) {
+      if (n && this.words.length - n < 20) {
         this.onNetworkSubject(this.token);
       }
     },
@@ -208,6 +214,11 @@ export default {
     // UsernameProxy() {
     //   return String.prototype.toUpperCase.apply(this.username);
     // }
+  },
+
+  destroyed() {
+    document.onkeydown = null;
+    this.timer = null;
   },
 
   methods: {
@@ -324,17 +335,27 @@ export default {
 
       this.onNetworkMark(mark_result);
 
-      this.word =
-        pointer + 1 < this.answer.length
-          ? Object.assign({}, this.answer[pointer + 1], {
-              old_mark_list: [].concat(this.answer[pointer + 1].mark_list),
-            })
-          : Object.assign({}, words[pointer + 1], {
-              mark_list: [],
-              color: {
-                'background-color': this.colors[(pointer + 1) % 4],
-              },
-            });
+      if (pointer + 1 < this.answer.length) {
+        let temp = {};
+
+        if (this.answer[pointer + 1].ord_mark_list) {
+          temp = Object.assign({}, this.answer[pointer + 1], {
+            old_mark_list: [].concat(this.answer[pointer + 1].mark_list),
+          });
+        } else {
+          temp = this.answer.pop();
+        }
+
+        this.word = temp;
+      } else {
+        this.word = Object.assign({}, words[pointer + 1], {
+          mark_list: [],
+          color: {
+            'background-color': this.colors[(pointer + 1) % 4],
+          },
+        });
+      }
+
       this.pointer += 1;
       this.category = null;
 
@@ -343,9 +364,39 @@ export default {
       }
     },
 
-    async onNetworkLogin(student_id) {
+    onKeydownEvent() {
+      document.onkeydown = event => {
+        if (event.keyCode === 39) {
+          if (this.timer) {
+            clearTimeout(this.timer);
+          }
+
+          this.timer = setTimeout(() => {
+            this.onNextWord();
+          }, 200);
+        }
+        if (event.keyCode === 37) {
+          this.onPrevWord();
+        }
+      };
+    },
+
+    onHandleComplete() {
+      this.onNetworkCommit(this.token);
+    },
+
+    onHandleNextAnswer() {
+      const { token } = this;
+
+      this.onNetworkCommit({
+        token,
+        more_require_cnt: 50,
+      });
+    },
+
+    async onNetworkLogin(username) {
       const { data } = await login({
-        student_id,
+        username,
       }).catch(error => {
         this.message = '抱歉，你无权进行数据标记';
         this.$refs.tip.handlerError();
@@ -359,9 +410,9 @@ export default {
 
       Cookies.setCookie('token', data.token);
       this.visible = false;
-      this.username = student_id;
+      this.username = username;
       this.token = data.token;
-      window.sessionStorage.setItem('username', student_id);
+      window.sessionStorage.setItem('username', username);
       this.count = data.action_cnt;
       this.task = data.require_cnt;
       window.sessionStorage.setItem('task', data.require_cnt);
@@ -370,11 +421,13 @@ export default {
         this.complete = true;
         return;
       }
+
+      this.onKeydownEvent();
       // 获取题目
       this.onNetworkSubject(data.token);
     },
 
-    async onNetworkSubject(token, count = 100) {
+    async onNetworkSubject(token, count = 50) {
       const { data } = await subject({
         token,
         count,
@@ -400,7 +453,7 @@ export default {
         }),
       );
 
-      if (this.pointer > 1) {
+      if (this.pointer > 0) {
         this.words = this.words.concat(temp);
         return;
       }
@@ -421,10 +474,8 @@ export default {
       }
     },
 
-    async onNetworkValid(token) {
-      const { data } = await valid({
-        token,
-      }).catch(err => {
+    async onNetworkValid(entity) {
+      const { data } = await valid(entity).catch(err => {
         console.log('====================================');
         console.log(err);
         console.log('====================================');
@@ -438,14 +489,26 @@ export default {
 
       // this.token = data.token;
       this.count = data.action_cnt;
+      this.onKeydownEvent();
     },
 
-    async onNetworkCommit() {
-      const { data } = await commit().catch(err => {
+    async onNetworkCommit(entity) {
+      const { data } = await commit(entity).catch(err => {
         console.log('====================================');
         console.log(err);
         console.log('====================================');
       });
+
+      if (entity.more_require_cnt) {
+        this.onNetworkSubject(entity.token, entity.more_require_cnt);
+        this.complete = false;
+        this.task = this.task + 50;
+        window.sessionStorage.setItem('task', this.task);
+        return;
+      }
+
+      Cookies.setCookie('token', '');
+      window.location.reload();
     },
   },
 };
@@ -593,5 +656,9 @@ export default {
 .switch-container:nth-of-type(2) {
   border-radius: 50%;
   background-color: #288fd9;
+}
+
+.forbid {
+  background-color: #c72923 !important;
 }
 </style>
