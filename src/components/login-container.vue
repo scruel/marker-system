@@ -102,7 +102,7 @@ export default {
     h3 {
       text-align: center;
       color: #616366;
-      font-size: 16px;
+      font-size: 18px;
     }
 
     .input-item {
@@ -112,6 +112,7 @@ export default {
 
       span {
         font-weight: bold;
+        font-size: 16px;
         color: #616366;
       }
 

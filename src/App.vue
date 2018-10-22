@@ -355,7 +355,7 @@ export default {
     onNextWord() {
       const timestamp = new Date().getTime();
 
-      if (timestamp - this.log_time < 1200) {
+      if (timestamp - this.log_time < 1500) {
         this.message = '操作太频繁, 请稍等';
         this.log_time = timestamp;
         this.$refs.tip.handlerError();
@@ -442,7 +442,7 @@ export default {
         if (event.keyCode === 39) {
           this.timer = setTimeout(() => {
             this.onNextWord();
-          }, 1200);
+          }, 1000);
         }
 
         if (event.keyCode === 37) {
@@ -493,10 +493,10 @@ export default {
       window.sessionStorage.setItem('count', data.action_cnt);
       window.sessionStorage.setItem('task', data.require_cnt);
 
-      if (data.action_cnt >= data.require_cnt) {
-        this.complete = true;
-        return;
-      }
+      // if (data.action_cnt >= data.require_cnt) {
+      //   this.complete = true;
+      //   return;
+      // }
 
       this.onKeydownEvent();
       // 获取题目
