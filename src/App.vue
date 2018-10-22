@@ -372,7 +372,7 @@ export default {
       if (pointer + 1 < this.answer.length) {
         let temp = {};
 
-        if (this.answer[pointer + 1].ord_mark_list) {
+        if (this.answer[pointer + 1].old_mark_list) {
           temp = Object.assign({}, this.answer[pointer + 1], {
             old_mark_list: [].concat(this.answer[pointer + 1].mark_list),
           });
