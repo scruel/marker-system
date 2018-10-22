@@ -452,7 +452,9 @@ export default {
     },
 
     onHandleComplete() {
-      this.onNetworkCommit(this.token);
+      this.onNetworkCommit({
+        token: this.token,
+      });
     },
 
     onHandleNextAnswer() {
@@ -473,7 +475,8 @@ export default {
       });
 
       if (data.status === 1) {
-        this.complete = true;
+        this.message = data.msg;
+        this.$refs.tip.handlerError();
         return;
       }
 
@@ -584,6 +587,12 @@ export default {
         this.complete = false;
         this.task = this.task + 50;
         window.sessionStorage.setItem('task', this.task);
+        return;
+      }
+
+      if (data.status) {
+        this.message = data.msg;
+        this.$refs.tip.handlerError();
         return;
       }
 

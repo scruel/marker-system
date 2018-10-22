@@ -9,7 +9,7 @@
     />
     <div class="icon-tip">
       <img
-        src="../assets/image/check.png"
+        src="../assets/image/question.png"
         alt=""
       >
       <div>
