@@ -579,6 +579,9 @@ export default {
     },
 
     async onNetworkCommit(entity) {
+      if (this.count != this.task) {
+        return;
+      }
       const { data } = await commit(entity).catch(err => {
         console.log('====================================');
         console.log(err);
