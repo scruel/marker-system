@@ -4,7 +4,13 @@
     class="login-container"
   >
     <div class="login-block">
-      <h3>微云问卷</h3>
+      <div class="header">
+        <img
+          src="../assets/image/logo.png"
+          alt=""
+        >
+        <h3>微云问卷</h3>
+      </div>
       <div class="input-item">
         <span>用户名</span>
         <input
@@ -73,6 +79,18 @@ export default {
   background: linear-gradient(to bottom right, #135fab, #32a5ee);
   //   border-radius: 6px;
 
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+
+    img {
+      width: 40px;
+      height: 40px;
+      margin-right: 10px;
+    }
+  }
   .login-block {
     border-radius: 4px;
     padding: 20px 20px;
