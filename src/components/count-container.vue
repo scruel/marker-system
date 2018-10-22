@@ -1,5 +1,7 @@
 <template>
-  <section class="count-container">
+  <section
+    class="count-container"
+  >
     <div>
       <span>{{count}}/{{task}}</span>
       <span>(已标记词汇)</span>
@@ -10,26 +12,26 @@
 <script>
 export default {
   data() {
-    return {}
+    return {};
   },
 
   props: {
-      count: {
-          type: Number,
-          default: 0,
-      },
-      task: {
-          type: Number,
-          default: 0,
-      }
-  }
-}
+    count: {
+      type: Number,
+      default: 0,
+    },
+    task: {
+      type: Number,
+      default: 0,
+    },
+  },
+};
 </script>
     
 <style lang="scss" scope>
 .count-container {
   position: fixed;
-  bottom: 120px;
+  bottom: 130px;
   right: 20px;
 
   width: 90px;
@@ -44,7 +46,7 @@ export default {
     2px -2px 2px 0 rgba(40, 120, 255, 0.08),
     -2px -2px 2px 0 rgba(40, 120, 255, 0.08),
     -2px 2px 2px 0 rgba(40, 120, 255, 0.08);
-  transform: scale(0.75);
+  // transform: scale(0.75);
 
   div {
     display: flex;
