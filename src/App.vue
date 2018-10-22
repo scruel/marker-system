@@ -182,7 +182,7 @@ export default {
     this.task = Number.parseInt(task) || 0;
     this.username = username;
 
-    if (this.count >= this.task) {
+    if (this.task && this.count >= this.task) {
       this.complete = true;
     }
 
@@ -400,15 +400,16 @@ export default {
 
     onKeydownEvent() {
       document.onkeydown = event => {
-        if (event.keyCode === 39) {
-          if (this.timer) {
-            clearTimeout(this.timer);
-          }
+        if (this.timer) {
+          clearTimeout(this.timer);
+        }
 
+        if (event.keyCode === 39) {
           this.timer = setTimeout(() => {
             this.onNextWord();
-          }, 200);
+          }, 2000);
         }
+
         if (event.keyCode === 37) {
           this.onPrevWord();
         }
