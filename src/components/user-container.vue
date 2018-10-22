@@ -1,15 +1,15 @@
 <template>
-    <section
-        class="user-container"
-        @click="onHandleExit"
+  <section
+    class="user-container"
+    @click="onHandleExit"
+  >
+    <!-- <span>{{UsernameProxy}}</span> -->
+    <span>登出</span>
+    <img
+      src="../assets/image/logout.png"
+      alt=""
     >
-        <!-- <span>{{UsernameProxy}}</span> -->
-        <span>登出</span>
-        <img
-            src="../assets/image/logout.png"
-            alt=""
-        >
-    </section>
+  </section>
 </template>
     
 <script>
@@ -17,29 +17,31 @@ import Cookies from '../lib/cookies';
 
 export default {
   data() {
-    return {}
+    return {};
   },
 
-//   props: {
-//     username: {
-//         type: String,
-//         default: '',
-//     }
-//   },
+  //   props: {
+  //     username: {
+  //         type: String,
+  //         default: '',
+  //     }
+  //   },
 
-//   computed: {
-//       UsernameProxy() {
-//          return String.prototype.toUpperCase.apply(this.username);
-//       }
-//   },
+  //   computed: {
+  //       UsernameProxy() {
+  //          return String.prototype.toUpperCase.apply(this.username);
+  //       }
+  //   },
 
   methods: {
-      onHandleExit() {
-          Cookies.setCookie('token', '');
-          window.location.reload();
-      }
-  }
-}
+    onHandleExit() {
+      Cookies.setCookie('token', '');
+      window.location.reload();
+      window.sessionStorage.setItem('count', 0);
+      window.sessionStorage.setItem('task', 0);
+    },
+  },
+};
 </script>
     
 <style lang="scss" scope>

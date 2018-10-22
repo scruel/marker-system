@@ -42,7 +42,7 @@ export default {
       if (n.id != o.id) {
         this.onValidClick(this.marker);
       }
-    }
+    },
   },
 
   mounted() {
@@ -66,8 +66,9 @@ export default {
         this.$emit('select', this.marker);
         return;
       }
-      // 限制 4 个 （耦合）
-      if (word.mark_list && word.mark_list.length >= 4) {
+      // 限制 6 个 （耦合）
+      if (word.mark_list && word.mark_list.length >= 6) {
+        this.$emit('tip');
         return;
       }
 
@@ -89,7 +90,7 @@ export default {
       }
 
       this.isClick = false;
-    }
+    },
   },
 };
 </script>

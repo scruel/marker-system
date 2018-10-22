@@ -52,6 +52,18 @@
         </div>
         <div />
       </div>-->
+      <!-- <div
+        class="marker-list marker-bottom"
+      >
+        <marker-container
+          v-for="(item, index) in MarkersProxyList"
+          :key="index"
+          :marker="item"
+          :word="word"
+          @select="onSelectMarker"
+          @cancal="onCancalMarker"
+        />
+      </div>-->
       <div
         class="marker-list"
       >
@@ -62,6 +74,7 @@
           :word="word"
           @select="onSelectMarker"
           @cancal="onCancalMarker"
+          @tip="onTipMarker"
         />
       </div>
       <div class="word-list">
@@ -79,7 +92,7 @@
           <span
             v-if="word_tip"
             class="word-tip"
-          >至多可选 4 个分类</span>
+          >至多可选 6 个分类</span>
         </div>
         <switch-container
           :direction="true"
@@ -189,20 +202,20 @@ export default {
         this.onNetworkSubject(this.token);
       }
     },
-    word(n) {
-      // clearTimeout(this.timer);
+    // word(n) {
+    //   // clearTimeout(this.timer);
 
-      if (n.mark_list && n.mark_list.length === 4) {
-        // this.word_tip = true;
-        // this.timer = setTimeout(() => {
-        //   this.word_tip = false;
-        // }, 300);
-        this.word_tip = true;
-        return;
-      }
+    //   if (n.mark_list && n.mark_list.length === 6) {
+    //     // this.word_tip = true;
+    //     // this.timer = setTimeout(() => {
+    //     //   this.word_tip = false;
+    //     // }, 300);
+    //     this.word_tip = true;
+    //     return;
+    //   }
 
-      this.word_tip = false;
-    },
+    //   this.word_tip = false;
+    // },
   },
 
   computed: {
@@ -214,6 +227,10 @@ export default {
     // UsernameProxy() {
     //   return String.prototype.toUpperCase.apply(this.username);
     // }
+
+    // MarkersProxyList() {
+    //   return this.markers.splice(20);
+    // },
   },
 
   destroyed() {
@@ -256,6 +273,23 @@ export default {
 
     onCancalMarker() {
       this.marker = null;
+    },
+
+    onTipMarker() {
+      if (this.ctimer) {
+        clearTimeout(this.ctimer);
+      }
+
+      if (this.word.mark_list <= 6) {
+        this.word_tip = false;
+        return;
+      }
+
+      this.word_tip = true;
+
+      this.ctimer = setTimeout(() => {
+        this.word_tip = false;
+      }, 300);
     },
 
     onBuildAnswer(serial) {},
@@ -415,6 +449,7 @@ export default {
       window.sessionStorage.setItem('username', username);
       this.count = data.action_cnt;
       this.task = data.require_cnt;
+      window.sessionStorage.setItem('count', data.action_cnt);
       window.sessionStorage.setItem('task', data.require_cnt);
 
       if (data.action_cnt >= data.require_cnt) {
@@ -489,6 +524,9 @@ export default {
 
       // this.token = data.token;
       this.count = data.action_cnt;
+      this.task = data.require_cnt;
+      window.sessionStorage.setItem('count', data.action_cnt);
+      window.sessionStorage.setItem('task', data.require_cnt);
       this.onKeydownEvent();
     },
 
@@ -509,6 +547,8 @@ export default {
 
       Cookies.setCookie('token', '');
       window.location.reload();
+      window.sessionStorage.setItem('count', 0);
+      window.sessionStorage.setItem('task', 0);
     },
   },
 };
@@ -616,7 +656,7 @@ export default {
 
     .word-tip {
       position: absolute;
-      bottom: 10px;
+      bottom: 150px;
       padding: 5px 10px;
       border-radius: 2px;
       color: #ffffff;
@@ -633,7 +673,7 @@ export default {
 }
 
 .marker-list {
-  padding: 50px 30px 120px;
+  padding: 20px 30px 120px;
 
   flex: 1;
   display: flex;
@@ -646,6 +686,10 @@ export default {
     margin-left: 20px;
     margin-bottom: 10px;
   }
+}
+
+.marker-bottom {
+  padding-bottom: 0px;
 }
 
 .switch-container:nth-of-type(1) {
