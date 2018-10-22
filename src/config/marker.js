@@ -102,17 +102,17 @@ export default {
     },
     {
       uuid: 21,
-      name: '情感(正面倾向)',
+      name: '情感(正面)',
       belong: '其他',
     },
     {
       uuid: 22,
-      name: '情感(负面倾向)',
+      name: '情感(中性)',
       belong: '其他',
     },
     {
       uuid: 23,
-      name: '情感(中立倾向)',
+      name: '情感(负面)',
       belong: '其他',
     },
   ],
