@@ -191,7 +191,7 @@ export default {
     this.task = Number.parseInt(task) || 0;
     this.username = username;
 
-    if (this.task && this.count >= this.task) {
+    if (this.task && this.count == this.task) {
       this.complete = true;
     }
 
