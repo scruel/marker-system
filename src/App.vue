@@ -383,6 +383,7 @@ export default {
 
       const { pointer, words, word, token } = this;
 
+      // 直接 return 是啥意思?
       if (pointer >= words.length) {
         return;
       }
@@ -482,6 +483,7 @@ export default {
     async onNetworkLogin(username) {
       const { data } = await login({
         username,
+        name,
       }).catch(error => {
         this.message = '抱歉，你无权进行数据标记';
         this.$refs.tip.handlerError();

@@ -17,6 +17,11 @@
           type="text"
           v-model="student"
         >
+        <span>姓名(备注)</span>
+        <input
+          type="text"
+          v-model="name"
+        >
       </div>
       <div
         class="button-item"
@@ -27,12 +32,13 @@
     </div>
   </section>
 </template>
-    
+
 <script>
 export default {
   data() {
     return {
       student: '',
+      name: '',
     };
   },
 
@@ -49,7 +55,7 @@ export default {
 
       if (!student) {
         this.$emit('error', {
-          message: '请输入学号 ！',
+          message: '请输入用户名 ！',
         });
 
         return;
@@ -60,7 +66,7 @@ export default {
   },
 };
 </script>
-    
+
 <style lang="scss" scope>
 .login-container {
   position: fixed;
