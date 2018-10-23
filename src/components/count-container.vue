@@ -8,7 +8,7 @@
     </div>
   </section>
 </template>
-    
+
 <script>
 export default {
   data() {
@@ -27,7 +27,7 @@ export default {
   },
 };
 </script>
-    
+
 <style lang="scss" scope>
 .count-container {
   position: fixed;

@@ -1,4 +1,5 @@
 export default {
+  /* eslint-disable */
   getCookie(cname) {
     const name = `${cname}=`;
     const ca = document.cookie.split(';');
@@ -15,4 +16,5 @@ export default {
     // const expires = `expires=${d.toGMTString()}`;
     document.cookie = `${cname}=${cvalue};`;
   },
+  /* eslint-disable */
 };

@@ -17,7 +17,7 @@
     >
   </section>
 </template>
-    
+
 <script>
 export default {
   data() {
@@ -42,7 +42,7 @@ export default {
   },
 };
 </script>
-    
+
 <style lang="scss" scope>
 .switch-container {
   cursor: pointer;

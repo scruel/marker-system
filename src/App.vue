@@ -187,8 +187,8 @@ export default {
     const count = window.sessionStorage.getItem('count');
     const username = window.sessionStorage.getItem('username');
     const task = window.sessionStorage.getItem('task');
-    this.count = Number.parseInt(count) || 0;
-    this.task = Number.parseInt(task) || 0;
+    this.count = Number.parseInt(count, 10) || 0;
+    this.task = Number.parseInt(task, 10) || 0;
     this.username = username;
 
     // 防止无限提交
@@ -259,7 +259,7 @@ export default {
     onSelectMarker(marker) {
       const { word } = this;
 
-      let temp = word.mark_list;
+      const temp = word.mark_list;
 
       if (!temp) {
         this.word = Object.assign({}, word, {
@@ -268,10 +268,10 @@ export default {
         return;
       }
 
-      let instance = temp.find(item => item === marker.uuid);
+      const instance = temp.find(item => item === marker.uuid);
 
       if (instance) {
-        let ntemp = temp.filter(item => item !== marker.uuid);
+        const ntemp = temp.filter(item => item !== marker.uuid);
         this.word = Object.assign({}, word, {
           mark_list: ntemp,
         });
@@ -305,7 +305,7 @@ export default {
       }, 300);
     },
 
-    onBuildAnswer(serial) {},
+    onBuildAnswer() {},
 
     onHandleError(error) {
       const { message } = error;
@@ -313,8 +313,8 @@ export default {
       this.$refs.tip.handlerError();
     },
 
-    onHandlerSearch(keyword) {
-      const rege = new RegExp();
+    onHandlerSearch() {
+      // const rege = new RegExp();
     },
 
     onHandlerCategory(category) {
@@ -323,7 +323,7 @@ export default {
         return;
       }
 
-      if (this.category && this.category.name == category.name) {
+      if (this.category && this.category.name === category.name) {
         this.category = null;
         return;
       }
@@ -336,9 +336,10 @@ export default {
     },
 
     onPrevWord() {
+      /* eslint-disable */
       let { pointer, answer, word } = this;
 
-      if (0 >= pointer) {
+      if (pointer <= 0) {
         return;
       }
 
@@ -346,7 +347,7 @@ export default {
 
       pointer -= 1;
 
-      let temp = answer[pointer];
+      const temp = answer[pointer];
 
       this.word = Object.assign({}, temp, {
         old_mark_list: [].concat(temp.mark_list),
@@ -354,6 +355,7 @@ export default {
 
       this.pointer = pointer;
       this.category = null;
+      /* eslint-disable */
     },
 
     onNextWord() {
@@ -445,6 +447,7 @@ export default {
     },
 
     onKeydownEvent() {
+      /* eslint-disable */
       document.onkeydown = event => {
         if (this.timer) {
           clearTimeout(this.timer);
@@ -463,6 +466,7 @@ export default {
           this.onPrevWord();
         }
       };
+      /* eslint-disable */
     },
 
     onHandleComplete() {
@@ -484,6 +488,7 @@ export default {
       const { data } = await login({
         username,
         name,
+        /* eslint-disable */
       }).catch(error => {
         this.message = '抱歉，你无权进行数据标记';
         this.$refs.tip.handlerError();
@@ -533,8 +538,12 @@ export default {
       const { data } = await subject({
         token,
         count,
+        /* eslint-disable */
       }).catch(error => {
         this.visible = true;
+        console.log('====================================');
+        console.log();
+        console.log('====================================');
       });
 
       if (data.status) {
@@ -567,21 +576,18 @@ export default {
     },
 
     async onNetworkMark(marker) {
+      /* eslint-disable */
       const { data } = await mark(marker).catch(error => {});
 
       if (data.status) {
         Cookies.setCookie('token', '');
         this.visible = true;
-        return;
       }
     },
 
     async onNetworkValid(entity) {
-      const { data } = await valid(entity).catch(err => {
-        console.log('====================================');
-        console.log(err);
-        console.log('====================================');
-      });
+      /* eslint-disable */
+      const { data } = await valid(entity).catch(err => {});
 
       if (data.status) {
         Cookies.setCookie('token', '');
@@ -607,10 +613,13 @@ export default {
       if (this.task && this.count < this.task) {
         return;
       }
+      /* eslint-disable */
       const { data } = await commit(entity).catch(err => {
+        /* eslint-disable */
         console.log('====================================');
         console.log(err);
         console.log('====================================');
+        /* eslint-disable */
       });
 
       if (entity.more_require_cnt) {

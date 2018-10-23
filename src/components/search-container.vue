@@ -20,7 +20,7 @@
     </a>
   </section>
 </template>
-    
+
 <script>
 export default {
   data() {
@@ -58,7 +58,9 @@ export default {
       this.keyword = '';
 
       if (n) {
-        this.placeholder = this.word.word + ' ' + n.name;
+        /* eslint-disable */
+        this.placeholder = `${this.word.word} ${n.name}`;
+        /* eslint-disable */
         return;
       }
 
@@ -92,7 +94,7 @@ export default {
   },
 };
 </script>
-    
+
 <style lang="scss" scope>
 .search-container {
   // padding: 0px 10px;

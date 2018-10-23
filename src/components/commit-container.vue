@@ -3,24 +3,27 @@
     v-if="commit"
     class="result-container"
   >
-    <dir
-      class="modal"
-      @click="onCloseModal"
-    />
+    <dir class="modal"/>
     <div class="icon-tip">
-      <img
-        src="../assets/image/question.png"
-        alt=""
-      >
+      <div>
+        <img
+          src="../assets/image/question-update.png"
+          alt=""
+        >
+        <span>提交之后无法取消, 请确认是否提交</span>
+      </div>
       <div>
         <span
           @click="onHandleCommit"
-        >确认提交</span>
+        >提交</span>
+        <span
+          @click="onCloseModal"
+        >取消</span>
       </div>
     </div>
   </section>
 </template>
-    
+
 <script>
 export default {
   data() {
@@ -45,7 +48,7 @@ export default {
   },
 };
 </script>
-    
+
 <style lang="scss" scope>
 .result-container {
   position: fixed;
@@ -80,30 +83,38 @@ export default {
       -2px -2px 2px 0 rgba(40, 120, 255, 0.08),
       -2px 2px 2px 0 rgba(40, 120, 255, 0.08);
 
-    div {
+    div:nth-of-type(1) {
+      border-top: 0px solid #03ddff;
+      span {
+        font-size: 12px;
+      }
+    }
+
+    div:nth-of-type(2) {
       border-top: 1px solid #03ddff;
       width: 100%;
-      text-align: center;
-    }
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
 
-    span {
-      cursor: pointer;
-      display: inline-block;
-      font-size: 24px;
-      text-align: center;
-      padding: 20px 10px;
-    }
+      span {
+        cursor: pointer;
+        flex: 1;
+        display: inline-block;
+        font-size: 24px;
+        text-align: center;
+        // padding: 20px 10px;
+        // width: 50%;
+        text-align: center;
+      }
 
-    span:nth-of-type(1) {
-      color: #c72923;
-    }
+      span:nth-of-type(1) {
+        color: #c72923;
+      }
 
-    span:nth-of-type(2) {
-      color: #1296db;
-    }
-
-    span + span {
-      border-left: 1px solid rgba(226, 226, 226, 1);
+      span:nth-of-type(2) {
+        color: #1296db;
+      }
     }
   }
 }

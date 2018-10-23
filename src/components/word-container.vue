@@ -11,7 +11,7 @@
     </div>
     <!-- <div v-if="visible">
       <span style="opacity: 0;">{{alternative.word}}</span>
-    </div> -->
+    </div>-->
   </section>
 </template>
 
@@ -33,7 +33,7 @@ export default {
       default: () => ({
         color: {
           'border-color': '#ffffff',
-          'color' : '#ffffff',
+          color: '#ffffff',
         },
       }),
     },
@@ -54,9 +54,7 @@ export default {
     },
   },
 
-  mounted() {
-
-  },
+  mounted() {},
 
   methods: {
     onMouseDown(event) {
@@ -90,7 +88,7 @@ export default {
       // }
       window.getSelection().removeAllRanges();
 
-      const x = event.clientX + 15; 
+      const x = event.clientX + 15;
       const y = event.clientY + 15;
       this.$refs.node.style.left = `${x}px`;
       this.$refs.node.style.top = `${y}px`;
@@ -99,10 +97,10 @@ export default {
     onMouseUp() {
       window.getSelection().removeAllRanges();
 
-      let { offsetX, offsetY } = this;
+      const { offsetX, offsetY } = this;
       this.$refs.node.style.left = `${offsetX}px`;
       this.$refs.node.style.top = `${offsetY}px`;
-      
+
       document.onmousemove = null;
       document.onmouseup = null;
 
