@@ -360,7 +360,7 @@ export default {
       const timestamp = new Date().getTime();
 
       if (timestamp - this.log_time < 1500) {
-        this.message = '操作太频繁, 请稍等';
+        this.message = '操作太频繁，请稍等...';
         this.log_time = timestamp;
         this.$refs.tip.handlerError();
         return;
@@ -408,7 +408,17 @@ export default {
         mark_result = Object.assign({}, mark_result, {
           old_mark_list: word.old_mark_list,
         });
-      } else {
+      }
+
+      // 提交标记
+      await this.onNetworkMark(mark_result).catch(err => {
+        this.message = '服务器响应异常，请重试';
+        this.$refs.tip.handlerError();
+        this.log_time = 0;
+        throw err;
+      });
+
+      if (word.old_mark_list === undefined) {
         // 如果一直前进，则推入答案缓存
         this.answer.push(word);
         // 累计答题数
@@ -416,9 +426,6 @@ export default {
         // 更新缓存
         window.sessionStorage.setItem('count', this.count);
       }
-
-      // 提交标记
-      this.onNetworkMark(mark_result);
       // 判断当前指针是否大于答案缓存
       if (pointer + 1 < this.answer.length) {
         let temp = {};
@@ -503,8 +510,9 @@ export default {
 
     async onNetworkLogin(user) {
       const { data } = await login(user).catch(error => {
-        this.message = '抱歉，你无权进行数据标记';
+        this.message = '服务器响应异常，请重试';
         this.$refs.tip.handlerError();
+        throw error;
       });
 
       if (data.status === 1) {
@@ -555,10 +563,12 @@ export default {
         count,
         /* eslint-disable */
       }).catch(error => {
-        this.visible = true;
-        console.log('====================================');
-        console.log();
-        console.log('====================================');
+        // window.location.reload();
+        this.active = true;
+        this.message = '服务器响应异常，请重试';
+        this.$refs.tip.handlerError();
+        this.onNetworkSubject(token, count);
+        throw error;
       });
 
       if (data.status) {
@@ -591,19 +601,28 @@ export default {
     },
 
     async onNetworkMark(marker) {
-      /* eslint-disable */
-      const { data } = await mark(marker).catch(error => {});
+      return new Promise(async (resolve, reject) => {
+        /* eslint-disable */
+        const { data } = await mark(marker).catch(error => {
+          reject();
+        });
 
-      if (data.status) {
-        Cookies.setCookie('token', '');
-        this.visible = true;
-      }
+        if (data.status) {
+          Cookies.setCookie('token', '');
+          this.visible = true;
+          reject();
+        }
+
+        resolve();
+      });
     },
 
     onNetworkValid(entity) {
       return new Promise(async (resolve, reject) => {
         /* eslint-disable */
-        const { data } = await valid(entity).catch(err => {});
+        const { data } = await valid(entity).catch(error => {
+          reject();
+        });
 
         if (data.status) {
           Cookies.setCookie('token', '');
@@ -628,8 +647,9 @@ export default {
       /* eslint-disable */
       const { data } = await commit(entity).catch(err => {
         /* eslint-disable */
-        this.message = '服务器网络繁忙，请重试';
+        this.message = '服务器响应异常，请重试';
         this.$refs.tip.handlerError();
+        throw err;
         /* eslint-disable */
       });
 
@@ -891,8 +911,15 @@ export default {
   }
 
   .word-list {
-    font-size: 16px;
+    font-size: 19px;
     padding: 10px 10px;
+  }
+
+  .switch-container{
+     img{
+      width: 30px;
+      height: 30px;
+    }
   }
 }
 </style>
