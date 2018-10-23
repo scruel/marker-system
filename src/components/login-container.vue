@@ -18,6 +18,14 @@
           v-model="student"
         >
       </div>
+      <div class="input-item">
+        <span>姓名(备注)</span>
+        <input
+          type="text"
+          maxlength="10"
+          v-model="name"
+        >
+      </div>
       <div
         class="button-item"
         @click="handlerLogin"
@@ -33,6 +41,7 @@ export default {
   data() {
     return {
       student: '',
+      name: '',
     };
   },
 
@@ -45,7 +54,7 @@ export default {
 
   methods: {
     handlerLogin() {
-      const { student } = this;
+      const { student, name } = this;
 
       if (!student) {
         this.$emit('error', {
@@ -55,7 +64,18 @@ export default {
         return;
       }
 
-      this.$emit('login', student);
+      if (!name) {
+        this.$emit('error', {
+          message: '请输入姓名(备注) ！',
+        });
+
+        return;
+      }
+
+      this.$emit('login', {
+        username: student,
+        name,
+      });
     },
   },
 };

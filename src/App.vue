@@ -483,11 +483,8 @@ export default {
       });
     },
 
-    async onNetworkLogin(username) {
-      const { data } = await login({
-        username,
-        /* eslint-disable */
-      }).catch(error => {
+    async onNetworkLogin(user) {
+      const { data } = await login(user).catch(error => {
         this.message = '抱歉，你无权进行数据标记';
         this.$refs.tip.handlerError();
       });
