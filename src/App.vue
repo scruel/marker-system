@@ -167,7 +167,7 @@ export default {
     CommitContainer,
   },
 
-  created() {
+  async created() {
     const token = Cookies.getCookie('token');
 
     const count = window.sessionStorage.getItem('count');
@@ -187,16 +187,25 @@ export default {
     if (token) {
       this.visible = false;
       this.token = token;
-      this.onNetworkValid({
+      const { data } = await valid({
         token,
       });
+
+      if (data.status) {
+        Cookies.setCookie('token', '');
+        this.visible = true;
+        return;
+      }
+
+      this.onInitailData(data);
+
       // 防止一开始就显示提交问卷
       if (this.task && this.count >= this.task) {
         this.complete = true;
         return;
       }
-      this.complete = false;
 
+      this.complete = false;
       this.onKeydownEvent();
       this.onNetworkSubject(token);
     } else {
@@ -248,6 +257,15 @@ export default {
   },
 
   methods: {
+    onInitailData(data) {
+      // this.token = data.token;
+      this.username = data.username;
+      this.count = data.action_cnt;
+      this.task = data.require_cnt;
+      window.sessionStorage.setItem('count', data.action_cnt);
+      window.sessionStorage.setItem('task', data.require_cnt);
+    },
+
     onStudentLogin(user) {
       this.onNetworkLogin(user);
     },
@@ -355,7 +373,7 @@ export default {
       /* eslint-disable */
     },
 
-    onNextWord() {
+    async onNextWord() {
       const timestamp = new Date().getTime();
 
       if (timestamp - this.log_time < 1500) {
@@ -369,9 +387,17 @@ export default {
 
       // 询问是否最终提交
       if (!this.commit && this.count + 1 === this.task) {
-        this.onNetworkValid({
+        const { data } = await valid({
           token,
         });
+
+        if (data.status) {
+          Cookies.setCookie('token', '');
+          this.visible = true;
+          return;
+        }
+
+        this.onInitailData(data);
       }
 
       // 询问是否最终提交
