@@ -3,22 +3,21 @@
     v-if="commit"
     class="result-container"
   >
-    <dir class="modal"/>
+    <div
+      class="modal"
+      @click="onCloseModal"
+    />
     <div class="icon-tip">
       <div>
         <img
-          src="../assets/image/question-update.png"
+          src="../assets/image/question.png"
           alt=""
         >
-        <span>提交之后无法取消, 请确认是否提交</span>
+        <!-- <span>提交之后无法取消, 请确认是否提交</span> -->
       </div>
       <div>
-        <span
-          @click="onHandleCommit"
-        >提交</span>
-        <span
-          @click="onCloseModal"
-        >取消</span>
+        <span @click="onHandleCommit">提交</span>
+        <!-- <span >取消</span> -->
       </div>
     </div>
   </section>
@@ -85,9 +84,9 @@ export default {
 
     div:nth-of-type(1) {
       border-top: 0px solid #03ddff;
-      span {
-        font-size: 12px;
-      }
+      // span {
+      //   font-size: 12px;
+      // }
     }
 
     div:nth-of-type(2) {
@@ -106,15 +105,16 @@ export default {
         // padding: 20px 10px;
         // width: 50%;
         text-align: center;
+        padding: 10px 0px;
       }
 
       span:nth-of-type(1) {
         color: #c72923;
       }
 
-      span:nth-of-type(2) {
-        color: #1296db;
-      }
+      // span:nth-of-type(2) {
+      //   color: #1296db;
+      // }
     }
   }
 }

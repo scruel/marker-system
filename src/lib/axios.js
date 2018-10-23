@@ -18,7 +18,7 @@ instance.interceptors.request.use(
 
     timer = setTimeout(() => {
       window.vm.$loading();
-    }, 500);
+    }, 200);
 
     return config;
   },

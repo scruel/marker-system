@@ -153,4 +153,19 @@ export default {
   border: 0px !important;
   background-color: #2b96e0;
 }
+
+@media only screen and (max-width: 420px) {
+  .word-container {
+    border-radius: 4px;
+
+    div {
+      padding: 5px 10px;
+      text-align: center;
+    }
+
+    span {
+      font-size: 16px;
+    }
+  }
+}
 </style>
