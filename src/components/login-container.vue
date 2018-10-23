@@ -17,11 +17,6 @@
           type="text"
           v-model="student"
         >
-        <span>姓名(备注)</span>
-        <input
-          type="text"
-          v-model="name"
-        >
       </div>
       <div class="input-item">
         <span>姓名(备注)</span>
@@ -191,6 +186,18 @@ export default {
         font-weight: bold;
       }
     }
+  }
+
+  input::-webkit-input-placeholder {
+    color: #3A6BB4;
+    opacity: 1;
+    font-size: 14px;
+  }
+
+  input:-ms-input-placeholder {
+    color: #3A6BB4;
+    opacity: 1;
+    font-size: 14px;
   }
 }
 </style>
