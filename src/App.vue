@@ -190,6 +190,14 @@ export default {
       this.onNetworkValid({
         token,
       });
+      // 防止一开始就显示提交问卷
+      if (this.task && this.count >= this.task) {
+        this.complete = true;
+        return;
+      }
+      this.complete = false;
+
+      this.onKeydownEvent();
       this.onNetworkSubject(token);
     } else {
       // 初始化工作
@@ -601,21 +609,12 @@ export default {
         return;
       }
 
-      // 防止一开始就显示提交问卷
-      if (this.task && this.count >= this.task) {
-        this.complete = true;
-        return;
-      }
-      this.complete = false;
-
       // this.token = data.token;
       this.username = data.username;
       this.count = data.action_cnt;
       this.task = data.require_cnt;
       window.sessionStorage.setItem('count', data.action_cnt);
       window.sessionStorage.setItem('task', data.require_cnt);
-
-      this.onKeydownEvent();
     },
 
     async onNetworkCommit(entity) {
