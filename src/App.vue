@@ -143,9 +143,9 @@ export default {
       answer: [],
       message: '',
       count: 0,
+      task: 0,
       colors: ['#4caf50', '#607d8b', '#e24045', '#ffc700'],
       username: '',
-      task: 0,
       word_tip: false, // 显示词语弹框
       complete: false, // 显示完成弹框
       log_time: 0,
@@ -355,18 +355,17 @@ export default {
         return;
       }
 
-      // 防止无限点击
-      if (this.task && this.count >= this.task) {
-        this.complete = true;
-        return;
-      }
-
       // 询问是否最终提交
       if (!this.commit && this.count + 1 === this.task) {
         this.commit = true;
         return;
       }
 
+      // 防止无限点击
+      if (this.task && this.count >= this.task) {
+        this.complete = true;
+        return;
+      }
       this.commit = false;
 
       this.log_time = timestamp;
@@ -514,9 +513,9 @@ export default {
       this.visible = false;
       this.username = data.username;
       this.token = data.token;
-      window.sessionStorage.setItem('username', data.username);
       this.count = data.action_cnt;
       this.task = data.require_cnt;
+      window.sessionStorage.setItem('username', data.username);
       window.sessionStorage.setItem('count', data.action_cnt);
       window.sessionStorage.setItem('task', data.require_cnt);
 
@@ -591,17 +590,18 @@ export default {
         return;
       }
 
-      // this.token = data.token;
-      this.username = data.username;
-      this.count = data.action_cnt;
-      this.task = data.require_cnt;
-
       // 防止一开始就显示提交问卷
       if (this.task && this.count < this.task) {
         this.complete = false;
       }
+
+      // this.token = data.token;
+      this.username = data.username;
+      this.count = data.action_cnt;
+      this.task = data.require_cnt;
       window.sessionStorage.setItem('count', data.action_cnt);
       window.sessionStorage.setItem('task', data.require_cnt);
+
       this.onKeydownEvent();
     },
 
