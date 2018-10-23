@@ -148,7 +148,7 @@ export default {
       categorys: Category.data,
       markers: Marker.data,
       token: '',
-      visible: true,
+      visible: true, // 登陆弹框
       alternative: null,
       pointer: 0,
       word: {},
@@ -160,10 +160,10 @@ export default {
       colors: ['#4caf50', '#607d8b', '#e24045', '#ffc700'],
       username: '',
       task: 0,
-      word_tip: false,
-      complete: false,
+      word_tip: false, // 显示词语弹框
+      complete: false, // 显示完成弹框
       log_time: 0,
-      commit: false,
+      commit: false, // 显示确认提交弹框
     };
   },
 
@@ -191,7 +191,8 @@ export default {
     this.task = Number.parseInt(task) || 0;
     this.username = username;
 
-    if (this.task && this.count == this.task) {
+    // 防止无限提交
+    if (this.task && this.count >= this.task) {
       this.complete = true;
     }
 
@@ -202,6 +203,9 @@ export default {
         token,
       });
       this.onNetworkSubject(token);
+    } else {
+      // 初始化工作
+      this.visible = true;
     }
   },
 
@@ -362,6 +366,12 @@ export default {
         return;
       }
 
+      // 防止无限点击
+      if (this.task && this.count >= this.task) {
+        this.complete = true;
+        return;
+      }
+
       if (!this.commit && this.count + 1 === this.task) {
         this.commit = true;
         return;
@@ -489,6 +499,14 @@ export default {
         return;
       }
 
+      // 初始化工作
+      window.sessionStorage.removeItem('count');
+      window.sessionStorage.removeItem('task');
+      window.sessionStorage.removeItem('username');
+      this.pointer = 0;
+      this.answer = [];
+
+      // 初值设定
       Cookies.setCookie('token', data.token);
       this.visible = false;
       this.username = username;
@@ -573,13 +591,18 @@ export default {
       this.username = data.username;
       this.count = data.action_cnt;
       this.task = data.require_cnt;
+
+      // 防止一开始就显示提交问卷
+      if (this.task && this.count < this.task) {
+        this.complete = false;
+      }
       window.sessionStorage.setItem('count', data.action_cnt);
       window.sessionStorage.setItem('task', data.require_cnt);
       this.onKeydownEvent();
     },
 
     async onNetworkCommit(entity) {
-      if (this.count != this.task) {
+      if (this.task && this.count < this.task) {
         return;
       }
       const { data } = await commit(entity).catch(err => {
