@@ -164,7 +164,7 @@ export default {
     }
 
     span {
-      font-size: 16px;
+      font-size: 19px;
     }
   }
 }
