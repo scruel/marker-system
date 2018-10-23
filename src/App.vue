@@ -208,7 +208,7 @@ export default {
 
   watch: {
     pointer(n) {
-      if (n && this.words.length - n < 20) {
+      if (n && this.words.length - n < 8) {
         this.onNetworkSubject(this.token);
       }
     },
@@ -299,7 +299,7 @@ export default {
 
       this.ctimer = setTimeout(() => {
         this.word_tip = false;
-      }, 300);
+      }, 800);
     },
 
     onBuildAnswer() {},
@@ -412,8 +412,6 @@ export default {
 
       // 提交标记
       await this.onNetworkMark(mark_result).catch(err => {
-        this.message = '服务器响应异常，请重试';
-        this.$refs.tip.handlerError();
         this.log_time = 0;
         throw err;
       });
@@ -509,11 +507,14 @@ export default {
     },
 
     async onNetworkLogin(user) {
+      window.vm.$loading();
       const { data } = await login(user).catch(error => {
-        this.message = '服务器响应异常，请重试';
+        this.message = '服务器响应异常, 请重试';
         this.$refs.tip.handlerError();
+        window.vm.$loading.close();
         throw error;
       });
+      window.vm.$loading.close();
 
       if (data.status === 1) {
         this.message = data.msg;
@@ -557,17 +558,15 @@ export default {
       this.onNetworkSubject(data.token);
     },
 
-    async onNetworkSubject(token, count = 50) {
+    async onNetworkSubject(token, count = 40) {
       const { data } = await subject({
         token,
         count,
         /* eslint-disable */
       }).catch(error => {
-        // window.location.reload();
-        this.active = true;
-        this.message = '服务器响应异常，请重试';
+        window.vm.$loading();
+        this.message = '服务器响应异常.';
         this.$refs.tip.handlerError();
-        this.onNetworkSubject(token, count);
         throw error;
       });
 
@@ -604,7 +603,10 @@ export default {
       return new Promise(async (resolve, reject) => {
         /* eslint-disable */
         const { data } = await mark(marker).catch(error => {
+          this.message = '服务器响应异常, 请重试.';
+          this.$refs.tip.handlerError();
           reject();
+          throw error;
         });
 
         if (data.status) {
@@ -621,7 +623,10 @@ export default {
       return new Promise(async (resolve, reject) => {
         /* eslint-disable */
         const { data } = await valid(entity).catch(error => {
+          this.message = '服务器响应异常, 请重试.';
+          this.$refs.tip.handlerError();
           reject();
+          throw error;
         });
 
         if (data.status) {
@@ -646,11 +651,9 @@ export default {
       }
       /* eslint-disable */
       const { data } = await commit(entity).catch(err => {
-        /* eslint-disable */
-        this.message = '服务器响应异常，请重试';
+        this.message = '服务器响应异常, 请重试.';
         this.$refs.tip.handlerError();
         throw err;
-        /* eslint-disable */
       });
 
       if (entity.more_require_cnt) {

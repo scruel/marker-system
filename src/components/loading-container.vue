@@ -1,6 +1,6 @@
 <template>
   <section
-    v-show="active"
+    v-show="logging"
     class="dankal-loding"
   >
     <div class="modal"></div>
@@ -17,17 +17,17 @@
 export default {
   data() {
     return {
-      active: false,
+      logging: false,
     };
   },
 
   methods: {
     open() {
-      this.active = true;
+      this.logging = true;
     },
 
     hide() {
-      this.active = false;
+      this.logging = false;
     },
   },
 };

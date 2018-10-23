@@ -26,7 +26,7 @@ export default {
     $loading.close = () =>
       /* eslint-disable */
       new Promise((resolve, reject) => {
-        if (!loading || !loading.active) {
+        if (!loading || !loading.logging) {
           resolve();
         }
 
