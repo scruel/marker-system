@@ -23,8 +23,16 @@
         <input
           type="text"
           maxlength="10"
+          placeholder="请输入姓名, 已登记可忽略"
           v-model="name"
         >
+      </div>
+      <div class="illustrate-item">
+        <a
+          href="http://www.wysum.com/doc/标注系统使用说明(简).docx"
+          target="_blank"
+          class="wdoc"
+        >点击下载并查阅使用说明!</a>
       </div>
       <div
         class="button-item"
@@ -54,6 +62,10 @@ export default {
 
   methods: {
     handlerLogin() {
+      if (this.timer) {
+        clearTimeout(this.timer);
+      }
+
       const { student, name } = this;
 
       if (!student) {
@@ -64,18 +76,20 @@ export default {
         return;
       }
 
-      if (!name) {
-        this.$emit('error', {
-          message: '请输入姓名(备注) ！',
+      // if (!name) {
+      //   this.$emit('error', {
+      //     message: '请输入姓名(备注) ！',
+      //   });
+
+      //   return;
+      // }
+
+      this.timer = setTimeout(() => {
+        this.$emit('login', {
+          username: student,
+          name,
         });
-
-        return;
-      }
-
-      this.$emit('login', {
-        username: student,
-        name,
-      });
+      }, 200);
     },
   },
 };
@@ -112,9 +126,10 @@ export default {
       margin-right: 38px;
     }
   }
+
   .login-block {
     border-radius: 4px;
-    padding: 20px 20px;
+    padding: 20px 50px;
     background-color: #ffffff;
     font-size: 18px;
     box-shadow: 2px 2px 4px #3ba3ff;
@@ -159,6 +174,17 @@ export default {
       line-height: 42px;
 
       border-radius: 2px;
+    }
+
+    .illustrate-item {
+      text-align: center;
+      margin-bottom: 20px;
+      a {
+        text-decoration: none;
+        text-align: center;
+        color: red;
+        font-weight: bold;
+      }
     }
   }
 }

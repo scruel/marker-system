@@ -6,12 +6,8 @@
         @login="onStudentLogin"
         @error="onHandleError"
       />
-      <div
-        class="navbar-block"
-      >
-        <div
-          class="shadow-block"
-        >
+      <div class="navbar-block">
+        <div class="shadow-block">
           <img
             class="logo"
             src="./assets/image/logo.png"
@@ -33,18 +29,14 @@
             @category="onHandlerCategory"
           />
         </div>
-        <div
-          class="shadow-block"
-        >
+        <div class="shadow-block">
           <search-container
             :word="word"
             :category="category"
             @search="onHandlerSearch"
           />
-          <div
-            class="username"
-          >{{username}}</div>
-          <user-container/>
+          <div class="username">{{username}}</div>
+          <user-container />
         </div>
       </div>
       <!-- <div class="category-list">
@@ -64,9 +56,7 @@
           @cancal="onCancalMarker"
         />
       </div>-->
-      <div
-        class="marker-list"
-      >
+      <div class="marker-list">
         <marker-container
           v-for="(item, index) in MarkersProxy"
           :key="index"
@@ -83,12 +73,8 @@
           @prev="onPrevWord"
           :class="{forbid: !pointer}"
         />
-        <div
-          class="word-block"
-        >
-          <word-container
-            :word="word"
-          />
+        <div class="word-block">
+          <word-container :word="word" />
           <span
             v-if="word_tip"
             class="word-tip"
@@ -343,16 +329,17 @@ export default {
         return;
       }
 
+      // 缓存答案，位于答案的最后一位
       answer[pointer] = word;
 
       pointer -= 1;
 
       const temp = answer[pointer];
-
+      // 取出缓存
       this.word = Object.assign({}, temp, {
         old_mark_list: [].concat(temp.mark_list),
       });
-
+      // 更新指针
       this.pointer = pointer;
       this.category = null;
       /* eslint-disable */
@@ -374,6 +361,7 @@ export default {
         return;
       }
 
+      // 询问是否最终提交
       if (!this.commit && this.count + 1 === this.task) {
         this.commit = true;
         return;
@@ -389,38 +377,49 @@ export default {
         return;
       }
 
+      // 提交标记需要的数据
       let mark_result = {
         token,
         word_id: word.id,
         mark_list: word.mark_list || [],
       };
 
+      // 判断是不是点击返回的之后在前进
       if (word.old_mark_list) {
         this.answer[pointer] = word;
+        // 用来合并新的对象
         mark_result = Object.assign({}, mark_result, {
           old_mark_list: word.old_mark_list,
         });
       } else {
+        // 如果一直前进，则推入答案缓存
         this.answer.push(word);
+        // 累计答题数
         this.count += 1;
+        // 更新缓存
         window.sessionStorage.setItem('count', this.count);
       }
 
+      // 提交标记
       this.onNetworkMark(mark_result);
-
+      // 判断当前指针是否大于答案缓存
       if (pointer + 1 < this.answer.length) {
         let temp = {};
-
+        // 获取当前的指针的下一个， 有old_mark_list说明已经提交过的答案
         if (this.answer[pointer + 1].old_mark_list) {
+          // 更新词语
           temp = Object.assign({}, this.answer[pointer + 1], {
             old_mark_list: [].concat(this.answer[pointer + 1].mark_list),
           });
         } else {
+          // 没有提交过，弹出答案缓存，用于重新提交
           temp = this.answer.pop();
         }
 
+        // 更新词语
         this.word = temp;
       } else {
+        // 指针大于时提交从词语列表中取出新词
         this.word = Object.assign({}, words[pointer + 1], {
           mark_list: [],
           color: {
@@ -429,9 +428,11 @@ export default {
         });
       }
 
+      // 指针加 1
       this.pointer += 1;
       this.category = null;
 
+      // 弹窗提交
       if (this.task && this.count === this.task) {
         this.complete = true;
       }
@@ -511,9 +512,9 @@ export default {
       // 初值设定
       Cookies.setCookie('token', data.token);
       this.visible = false;
-      this.username = username;
+      this.username = data.username;
       this.token = data.token;
-      window.sessionStorage.setItem('username', username);
+      window.sessionStorage.setItem('username', data.username);
       this.count = data.action_cnt;
       this.task = data.require_cnt;
       window.sessionStorage.setItem('count', data.action_cnt);
