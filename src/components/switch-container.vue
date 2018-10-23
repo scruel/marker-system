@@ -1,7 +1,5 @@
 <template>
-  <section
-    class="switch-container"
-  >
+  <section class="switch-container">
     <img
       v-if="!direction"
       src="../assets/image/left-circle.png"
@@ -75,4 +73,13 @@ export default {
 //     height: 60px;
 //   }
 // }
+
+@media only screen and (max-width: 768px) {
+  .switch-container {
+    img {
+      width: 30px;
+      height: 30px;
+    }
+  }
+}
 </style>

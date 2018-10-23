@@ -914,12 +914,5 @@ export default {
     font-size: 19px;
     padding: 10px 10px;
   }
-
-  .switch-container{
-     img{
-      width: 30px;
-      height: 30px;
-    }
-  }
 }
 </style>
