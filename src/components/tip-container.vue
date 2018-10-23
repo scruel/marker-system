@@ -1,45 +1,45 @@
 <template>
-    <transition name="fade">
-        <section
-            v-if="display"
-            class="tip-container"
-        >
-            <span>{{message}}</span>
-        </section>
-    </transition>
+  <transition name="fade">
+    <section
+      v-if="display"
+      class="tip-container"
+    >
+      <span>{{message}}</span>
+    </section>
+  </transition>
 </template>
-    
+
 <script>
 export default {
   data() {
     return {
-        display: false,
-    }
+      display: false,
+    };
   },
 
   props: {
     message: {
-        type: String,
-        default: 'Tip In System',
-    }
+      type: String,
+      default: 'Tip In System',
+    },
   },
 
   methods: {
     handlerError() {
-        this.display = true;
+      this.display = true;
 
-        if (this.timer) {
-            clearTimeout(this.timer);
-        }
+      if (this.timer) {
+        clearTimeout(this.timer);
+      }
 
-        this.timer = setTimeout(() => {
-            this.display = false;
-        }, 1500);
-    }
-  }
-}
+      this.timer = setTimeout(() => {
+        this.display = false;
+      }, 1500);
+    },
+  },
+};
 </script>
-    
+
 <style lang="scss" scope>
 .tip-container {
   position: absolute;

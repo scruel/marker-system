@@ -34,12 +34,12 @@ export default {
   },
 
   watch: {
-    marker(n, o) {
+    marker(n) {
       this.onValidClick(n);
     },
 
     word(n, o) {
-      if (n.id != o.id) {
+      if (n.id !== o.id) {
         this.onValidClick(this.marker);
       }
     },
@@ -82,7 +82,7 @@ export default {
         return;
       }
 
-      let instance = this.word.mark_list.find(item => item === marker.uuid);
+      const instance = this.word.mark_list.find(item => item === marker.uuid);
 
       if (instance) {
         this.isClick = true;

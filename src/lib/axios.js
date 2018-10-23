@@ -7,10 +7,10 @@ const instance = axios.create({
   timeout: 20000, // 设置超时时间
 });
 
-let loading;
 let timer;
 
 instance.interceptors.request.use(
+  /* eslint-disable */
   config => {
     if (timer) {
       clearTimeout(timer);
@@ -22,7 +22,8 @@ instance.interceptors.request.use(
 
     return config;
   },
-
+  /* eslint-disable */
+  /* eslint-disable */
   error => {
     if (timer) {
       clearTimeout(timer);
@@ -30,9 +31,11 @@ instance.interceptors.request.use(
     window.vm.$loading();
     return Promise.reject(error);
   },
+  /* eslint-disable */
 );
 
 instance.interceptors.response.use(
+  /* eslint-disable */
   response => {
     if (timer) {
       clearTimeout(timer);
@@ -40,7 +43,8 @@ instance.interceptors.response.use(
     window.vm.$loading.close();
     return response;
   },
-
+  /* eslint-disable */
+  /* eslint-disable */
   error => {
     if (timer) {
       clearTimeout(timer);
@@ -49,6 +53,7 @@ instance.interceptors.response.use(
     window.vm.$loading.close();
     return Promise.reject(error);
   },
+  /* eslint-disable */
 );
 
 export default instance;

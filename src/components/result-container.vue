@@ -4,7 +4,7 @@
     class="result-container"
   >
     <dir class="modal"/>
-    <div class="icon-tip">
+    <div class="icon-tip-result">
       <img
         src="../assets/image/check.png"
         alt=""
@@ -20,10 +20,8 @@
     </div>
   </section>
 </template>
-    
-<script>
-import Cookies from '../lib/cookies';
 
+<script>
 export default {
   data() {
     return {};
@@ -47,7 +45,7 @@ export default {
   },
 };
 </script>
-    
+
 <style lang="scss" scope>
 .result-container {
   position: fixed;
@@ -63,7 +61,7 @@ export default {
     background-color: rgba(50, 47, 81, 0.9);
   }
 
-  .icon-tip {
+  .icon-tip-result {
     position: absolute;
     top: 50%;
     left: 50%;

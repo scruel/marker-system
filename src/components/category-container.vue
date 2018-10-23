@@ -1,31 +1,31 @@
 <template>
-    <section
-        class="category-container"
-        :class="{active: active}"
-        @click="handleCategory"
-    >
-        <span>{{category.name}}</span>
-    </section>
+  <section
+    class="category-container"
+    :class="{active: active}"
+    @click="handleCategory"
+  >
+    <span>{{category.name}}</span>
+  </section>
 </template>
-    
+
 <script>
 export default {
   data() {
     return {
-        active: false,
-        clicks: true,
-    }
+      active: false,
+      clicks: true,
+    };
   },
 
   props: {
     category: {
-        type: Object,
-        default: () => ({}),
+      type: Object,
+      default: () => ({}),
     },
 
     channel: {
-        type: Object,
-        default: () => ({}),
+      type: Object,
+      default: () => ({}),
     },
 
     word: {
@@ -36,46 +36,46 @@ export default {
   },
 
   watch: {
-      channel(n) {
-          if (!n || n.name !== this.category.name) {
-              this.active = false;
-              this.clicks = true;
-          }
-      },
+    channel(n) {
+      if (!n || n.name !== this.category.name) {
+        this.active = false;
+        this.clicks = true;
+      }
+    },
   },
 
   methods: {
     handleCategory() {
-        this.active = !this.active;
-        this.clicks = !this.clicks;
-        this.$emit('category', this.category);
+      this.active = !this.active;
+      this.clicks = !this.clicks;
+      this.$emit('category', this.category);
     },
 
     onSelectShoot() {
-        if (!this.word) {
-            return;
-        }
-        this.timer = setTimeout(() => {
-            this.active = true;
-            this.$emit('category', this.category);
-        }, 300);
+      if (!this.word) {
+        return;
+      }
+      this.timer = setTimeout(() => {
+        this.active = true;
+        this.$emit('category', this.category);
+      }, 300);
     },
 
     onCancalShoot() {
-        clearTimeout(this.timer);
-        
-        if (this.active && this.clicks) {
-            this.$emit('category', null);
-        }
+      clearTimeout(this.timer);
 
-        if (this.clicks) {
-            this.active = false;
-        }  
+      if (this.active && this.clicks) {
+        this.$emit('category', null);
+      }
+
+      if (this.clicks) {
+        this.active = false;
+      }
     },
-  }
-}
+  },
+};
 </script>
-    
+
 <style lang="scss" scope>
 .category-container {
   // border: 1px solid #1e1e1e;

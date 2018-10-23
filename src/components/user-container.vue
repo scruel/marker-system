@@ -11,7 +11,7 @@
     >
   </section>
 </template>
-    
+
 <script>
 import Cookies from '../lib/cookies';
 
@@ -43,7 +43,7 @@ export default {
   },
 };
 </script>
-    
+
 <style lang="scss" scope>
 .user-container {
   cursor: pointer;
