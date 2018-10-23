@@ -370,8 +370,6 @@ export default {
 
       this.log_time = timestamp;
 
-      const { pointer, words, word, token } = this;
-
       if (pointer >= words.length) {
         return;
       }
