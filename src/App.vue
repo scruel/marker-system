@@ -792,4 +792,120 @@ export default {
 .forbid {
   background-color: #c72923 !important;
 }
+
+@media only screen and (max-width: 420px) {
+  .navbar-block {
+    padding: 5px 5px;
+    display: block;
+
+    .logo {
+      width: 42px;
+      height: 42px;
+      margin-right: 10px;
+    }
+
+    .search-container {
+      width: 150px;
+      margin-right: 10px;
+
+      input {
+        width: 160px;
+      }
+    }
+
+    .user-container {
+      padding: 0px 10px;
+
+      .user-container span {
+        font-size: 12px;
+      }
+
+      .user-container img {
+        width: 16px;
+        height: 16px;
+      }
+    }
+
+    .username {
+      display: block;
+      color: #2280ca;
+      height: 36px;
+      border-radius: 2px;
+      padding: 0px 10px;
+      line-height: 36px;
+
+      margin-right: 10px;
+    }
+
+    .category-container {
+      padding: 5px 5px;
+    }
+
+    .shadow-block:nth-of-type(2) {
+      flex-wrap: nowrap;
+      justify-content: space-between;
+    }
+  }
+
+  .marker-list {
+    padding: 20px 10px 120px;
+
+    .marker-container {
+      margin-left: 10px;
+      margin-bottom: 10px;
+    }
+  }
+
+  .marker-container {
+    width: 145px;
+
+    span:nth-of-type(1) {
+      font-size: 16px;
+    }
+  }
+
+  .count-container {
+    transform: scale(0.75);
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .navbar-block {
+    padding: 5px 5px;
+
+    .logo {
+      width: 42px;
+      height: 42px;
+      margin-right: 10px;
+    }
+
+    .user-container {
+      padding: 0px 10px;
+
+      .user-container span {
+        font-size: 12px;
+      }
+
+      .user-container img {
+        width: 16px;
+        height: 16px;
+      }
+    }
+
+    .username {
+      display: block;
+      color: #2280ca;
+      height: 36px;
+      border-radius: 2px;
+      padding: 0px 10px;
+      line-height: 36px;
+
+      margin-right: 10px;
+    }
+
+    .category-container {
+      padding: 5px 5px;
+    }
+  }
+}
 </style>

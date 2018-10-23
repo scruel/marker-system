@@ -165,4 +165,14 @@ export default {
 //     color: #3c9e44;
 //   }
 // }
+
+@media only screen and (max-width: 420px) {
+  .marker-container {
+    width: 145px;
+
+    span:nth-of-type(1) {
+      font-size: 16px;
+    }
+  }
+}
 </style>
