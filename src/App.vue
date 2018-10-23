@@ -187,17 +187,9 @@ export default {
     if (token) {
       this.visible = false;
       this.token = token;
-      const { data } = await valid({
+      await this.onNetworkValid({
         token,
       });
-
-      if (data.status) {
-        Cookies.setCookie('token', '');
-        this.visible = true;
-        return;
-      }
-
-      this.onInitailData(data);
 
       // 防止一开始就显示提交问卷
       if (this.task && this.count >= this.task) {
@@ -257,15 +249,6 @@ export default {
   },
 
   methods: {
-    onInitailData(data) {
-      // this.token = data.token;
-      this.username = data.username;
-      this.count = data.action_cnt;
-      this.task = data.require_cnt;
-      window.sessionStorage.setItem('count', data.action_cnt);
-      window.sessionStorage.setItem('task', data.require_cnt);
-    },
-
     onStudentLogin(user) {
       this.onNetworkLogin(user);
     },
@@ -387,17 +370,9 @@ export default {
 
       // 询问是否最终提交
       if (!this.commit && this.count + 1 === this.task) {
-        const { data } = await valid({
+        await this.onNetworkValid({
           token,
         });
-
-        if (data.status) {
-          Cookies.setCookie('token', '');
-          this.visible = true;
-          return;
-        }
-
-        this.onInitailData(data);
       }
 
       // 询问是否最终提交
@@ -625,22 +600,25 @@ export default {
       }
     },
 
-    async onNetworkValid(entity) {
-      /* eslint-disable */
-      const { data } = await valid(entity).catch(err => {});
+    onNetworkValid(entity) {
+      return new Promise(async (resolve, reject) => {
+        /* eslint-disable */
+        const { data } = await valid(entity).catch(err => {});
 
-      if (data.status) {
-        Cookies.setCookie('token', '');
-        this.visible = true;
-        return;
-      }
+        if (data.status) {
+          Cookies.setCookie('token', '');
+          this.visible = true;
+          reject();
+        }
 
-      // this.token = data.token;
-      this.username = data.username;
-      this.count = data.action_cnt;
-      this.task = data.require_cnt;
-      window.sessionStorage.setItem('count', data.action_cnt);
-      window.sessionStorage.setItem('task', data.require_cnt);
+        // this.token = data.token;
+        this.username = data.username;
+        this.count = data.action_cnt;
+        this.task = data.require_cnt;
+        window.sessionStorage.setItem('count', data.action_cnt);
+        window.sessionStorage.setItem('task', data.require_cnt);
+        resolve();
+      });
     },
 
     async onNetworkCommit(entity) {
