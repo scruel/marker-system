@@ -70,7 +70,7 @@ export default {
 
       if (!student) {
         this.$emit('error', {
-          message: '请输入学号 ！',
+          message: '请输入用户名 ！',
         });
 
         return;
@@ -186,6 +186,18 @@ export default {
         font-weight: bold;
       }
     }
+  }
+
+  input::-webkit-input-placeholder {
+    color: #3A6BB4;
+    opacity: 1;
+    font-size: 14px;
+  }
+
+  input:-ms-input-placeholder {
+    color: #3A6BB4;
+    opacity: 1;
+    font-size: 14px;
   }
 }
 </style>
