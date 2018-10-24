@@ -116,6 +116,7 @@ export default {
       color: #616366;
       font-size: 16px;
       border-bottom: 1px solid #e2e2e2;
+      text-align: right;
     }
   }
 

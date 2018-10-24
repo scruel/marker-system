@@ -509,7 +509,7 @@ export default {
     async onNetworkLogin(user) {
       window.vm.$loading();
       const { data } = await login(user).catch(error => {
-        this.message = '服务器响应异常, 请重试';
+        this.message = '网络响应异常, 请重试';
         this.$refs.tip.handlerError();
         window.vm.$loading.close();
         throw error;
@@ -565,7 +565,7 @@ export default {
         /* eslint-disable */
       }).catch(error => {
         window.vm.$loading();
-        this.message = '服务器响应异常.';
+        this.message = '网络响应异常, 请刷新重试.';
         this.$refs.tip.handlerError();
         throw error;
       });
@@ -603,7 +603,7 @@ export default {
       return new Promise(async (resolve, reject) => {
         /* eslint-disable */
         const { data } = await mark(marker).catch(error => {
-          this.message = '服务器响应异常, 请重试.';
+          this.message = '网络响应异常, 请重试.';
           this.$refs.tip.handlerError();
           reject();
           throw error;
@@ -623,7 +623,7 @@ export default {
       return new Promise(async (resolve, reject) => {
         /* eslint-disable */
         const { data } = await valid(entity).catch(error => {
-          this.message = '服务器响应异常, 请重试.';
+          this.message = '网络响应异常, 请重试.';
           this.$refs.tip.handlerError();
           reject();
           throw error;
@@ -651,7 +651,7 @@ export default {
       }
       /* eslint-disable */
       const { data } = await commit(entity).catch(err => {
-        this.message = '服务器响应异常, 请重试.';
+        this.message = '网络响应异常, 请重试.';
         this.$refs.tip.handlerError();
         throw err;
       });
